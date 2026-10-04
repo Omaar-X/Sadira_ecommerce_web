@@ -1,5 +1,6 @@
 import "server-only";
 import { cache } from "react";
+import { connection } from "next/server";
 import localCatalog from "@/data/products.generated.json";
 import { getAppsScriptConfig } from "@/lib/delivery";
 import { parseCatalogProduct } from "@/lib/catalogValidation";
@@ -14,6 +15,8 @@ export class CatalogLoadError extends Error {
 export const getCatalogEntries = cache(async (): Promise<CatalogEntry[]> => {
   const entries = new Map<string, CatalogEntry>((localCatalog as Product[]).map(product => [product.id, { product, revision: "" }]));
   if (!getAppsScriptConfig()) return [...entries.values()];
+  // Read Google Sheets only for an actual request, never during the production build.
+  await connection();
   const result = await callAppsScript({ action: "catalog" }, { timeoutMs: 25000, label: "catalog" });
   if (result?.success !== true || !Array.isArray(result.products)) throw new CatalogLoadError();
   for (const row of result.products) {

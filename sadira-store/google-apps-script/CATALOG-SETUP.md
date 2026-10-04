@@ -5,7 +5,7 @@ The code is complete locally. Publishing real products requires the store owner'
 ## One-time Google setup
 
 1. Open the store's Google Sheet, then **Extensions → Apps Script**.
-2. Add/update these files from this folder: `Code.gs`, `InventorySeed.gs`, `Catalog.gs`, and `CatalogSeed.gs`. Keep any existing project files. `CatalogSeed.gs` contains the current 12 products, including the recent additions.
+2. Add/update these files from this folder: `Code.gs`, `InventorySeed.gs`, `Catalog.gs`, and `CatalogSeed.gs`. Keep any existing project files. `CatalogSeed.gs` contains the current 16 products, including the recent additions.
 3. In **Project Settings → Script properties**, set `APPS_SCRIPT_SECRET` to a random secret of at least 32 characters. A bound script uses its current spreadsheet. An unbound script also needs `SPREADSHEET_ID`.
 4. Run `setupCatalog()` in the editor and grant the requested Sheets and Drive permissions. It adds `Catalog` and `CatalogImages` tabs, adds missing inventory rows, and creates a private **Sadira Product Images** Drive folder. Existing catalog edits and live inventory are preserved. The folder ID is saved automatically as `PRODUCT_IMAGE_FOLDER_ID`.
 5. Deploy as a **Web app**, executing as **Me**, accessible to **Anyone**. For an existing deployment, select **Manage deployments → Edit → New version → Deploy** to keep the same URL. Access to data still requires the shared secret; the website alone sends that secret from its server.

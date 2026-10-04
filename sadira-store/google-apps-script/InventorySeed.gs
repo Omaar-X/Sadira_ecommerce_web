@@ -23,5 +23,6 @@ var SADIRA_PRODUCT_SEED = [
   { productId: "SAD-BRACELET-002", productName: "MK Signature Watch", stock: null },
   { productId: "SAD-COMBO-001", productName: "Abaya & Hijab Combo", stock: null },
   { productId: "SAD-PERFUME-001", productName: "Gucci Mini Perfume (Master Copy)", stock: null },
-  { productId: "SAD-BAG-003", productName: "PU Leather Bag", stock: null }
+  { productId: "SAD-BAG-003", productName: "PU Leather Bag", stock: null },
+  { productId: "SAD-BAG-004", productName: "Floral Charm Shoulder Bag", stock: null }
 ];

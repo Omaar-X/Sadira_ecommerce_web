@@ -629,6 +629,38 @@
         "bag pu leather 2.jpeg"
       ],
       "detailsSource": "leather bag detyails.png"
+    },
+    {
+      "id": "SAD-BAG-004",
+      "category": "bag",
+      "name": "Floral Charm Shoulder Bag",
+      "slug": "floral-charm-shoulder-bag",
+      "price": 599,
+      "salePrice": null,
+      "description": "A classic shoulder bag with delicate floral and bead detailing for everyday and elegant looks.",
+      "features": [
+        "Floral charm and hanging bead detailing"
+      ],
+      "details": [],
+      "sizes": [],
+      "colors": [
+        "Black",
+        "Coffee",
+        "Off-white",
+        "White"
+      ],
+      "designs": [],
+      "stock": null,
+      "photos": [
+        "Shoulder bag 1.jpeg",
+        "shoudler bag 2.jpeg",
+        "Shoulder bag 3.jpeg",
+        "Shoulder bag 4.jpeg"
+      ],
+      "detailsSource": "sholuder bag details.png",
+      "featured": false,
+      "newArrival": true,
+      "status": "active"
     }
   ]
 }

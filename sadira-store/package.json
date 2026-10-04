@@ -15,6 +15,7 @@
     "test:public:browser": "node scripts/test-public-browser.mjs",
     "test:catalog": "node scripts/test-catalog.mjs",
     "test:catalog:browser": "node scripts/test-catalog-browser.mjs",
+    "test:checkout:browser": "node scripts/test-checkout-browser.mjs",
     "test:mobile:browser": "node scripts/test-live-mobile.mjs"
   },
   "dependencies": {

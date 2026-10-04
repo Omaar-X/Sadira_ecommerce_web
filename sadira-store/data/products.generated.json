@@ -590,5 +590,38 @@
     "featured": false,
     "newArrival": true,
     "status": "active"
+  },
+  {
+    "id": "SAD-BAG-004",
+    "name": "Floral Charm Shoulder Bag",
+    "slug": "floral-charm-shoulder-bag",
+    "category": "Bag",
+    "categorySlug": "bag",
+    "price": 599,
+    "salePrice": null,
+    "description": "A classic shoulder bag with delicate floral and bead detailing for everyday and elegant looks.",
+    "features": [
+      "Floral charm and hanging bead detailing"
+    ],
+    "details": [],
+    "sizes": [],
+    "colors": [
+      "Black",
+      "Coffee",
+      "Off-white",
+      "White"
+    ],
+    "designs": [],
+    "stock": null,
+    "images": [
+      "/catalog/bag/sad-bag-004/1.jpeg",
+      "/catalog/bag/sad-bag-004/2.jpeg",
+      "/catalog/bag/sad-bag-004/3.jpeg",
+      "/catalog/bag/sad-bag-004/4.jpeg"
+    ],
+    "detailsSource": "Bag/sholuder bag details.png",
+    "featured": false,
+    "newArrival": true,
+    "status": "active"
   }
 ]

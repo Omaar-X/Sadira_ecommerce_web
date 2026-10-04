@@ -1,4 +1,5 @@
 import type { DeliveryArea } from "@/types/checkout";
+import deliveryDefaults from "@/data/delivery.json";
 
 /*
  * SERVER-ONLY configuration (reads non-public env vars — never import from a
@@ -7,21 +8,22 @@ import type { DeliveryArea } from "@/types/checkout";
  *   DELIVERY_CHARGE_INSIDE_DHAKA   whole taka (digits only)
  *   DELIVERY_CHARGE_OUTSIDE_DHAKA  whole taka (digits only)
  *
- * Blank or invalid values mean "not configured" — never ৳0. Online ordering
- * stays disabled until both charges are configured.
+ * The store's published rates are used when environment overrides are blank.
+ * Invalid overrides disable ordering rather than silently charging a wrong amount.
  */
 
 export type DeliveryCharges = Record<DeliveryArea, number>;
 
-function parseCharge(value: string | undefined): number | null {
+function parseCharge(value: string | undefined, defaultCharge: number): number | null {
   const trimmed = value?.trim();
-  return trimmed && /^\d{1,5}$/.test(trimmed) ? Number(trimmed) : null;
+  if (!trimmed) return defaultCharge;
+  return /^\d{1,5}$/.test(trimmed) ? Number(trimmed) : null;
 }
 
 /** Both configured charges, or null if either is missing/invalid. */
 export function getDeliveryCharges(): DeliveryCharges | null {
-  const inside = parseCharge(process.env.DELIVERY_CHARGE_INSIDE_DHAKA);
-  const outside = parseCharge(process.env.DELIVERY_CHARGE_OUTSIDE_DHAKA);
+  const inside = parseCharge(process.env.DELIVERY_CHARGE_INSIDE_DHAKA, deliveryDefaults["inside-dhaka"]);
+  const outside = parseCharge(process.env.DELIVERY_CHARGE_OUTSIDE_DHAKA, deliveryDefaults["outside-dhaka"]);
   return inside === null || outside === null ? null : { "inside-dhaka": inside, "outside-dhaka": outside };
 }
 
