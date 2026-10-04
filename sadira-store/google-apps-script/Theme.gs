@@ -22,13 +22,18 @@ function applySadiraTheme() {
     sheet.setFrozenColumns(1);
     sheet.setRowHeights(1, rows, 30);
     sheet.setRowHeight(1, 44);
-    sheet.setColumnWidths(1, columns, 170);
+    sheet.autoResizeColumns(1, columns);
+    for (var columnIndex = 1; columnIndex <= columns; columnIndex++) {
+      sheet.setColumnWidth(columnIndex, Math.max(220, Math.min(380, sheet.getColumnWidth(columnIndex) + 32)));
+    }
     sheet.getRange(1, 1, 1, columns).setWrap(true)
       .setBorder(false, false, true, false, false, false, '#A34663', SpreadsheetApp.BorderStyle.SOLID_MEDIUM);
     var headers = sheet.getRange(1, 1, 1, columns).getValues()[0];
     headers.forEach(function (header, index) {
       var column = index + 1;
       var body = sheet.getRange(2, column, rows - 1, 1);
+      if (/_id$|^slug$|^revision$/.test(String(header))) sheet.setColumnWidth(column, 300);
+      if (/_at$/.test(String(header))) sheet.setColumnWidth(column, 240);
       if (['subtotal', 'delivery_charge', 'discount', 'total', 'unit_price', 'line_total'].indexOf(header) !== -1) {
         body.setNumberFormat('"৳ "#,##0').setHorizontalAlignment('right');
       }
@@ -36,11 +41,11 @@ function applySadiraTheme() {
         body.setNumberFormat('#,##0').setHorizontalAlignment('right');
       }
       if (/name|address|note/.test(String(header))) {
-        sheet.setColumnWidth(column, 260);
+        sheet.setColumnWidth(column, /address|note/.test(String(header)) ? 440 : 320);
         body.setWrapStrategy(SpreadsheetApp.WrapStrategy.WRAP);
       }
       if (header === 'product_json') {
-        sheet.setColumnWidth(column, 340);
+        sheet.setColumnWidth(column, 520);
         body.setWrapStrategy(SpreadsheetApp.WrapStrategy.CLIP);
       }
     });
