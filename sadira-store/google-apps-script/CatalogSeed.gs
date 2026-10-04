@@ -239,13 +239,22 @@ var SADIRA_CATALOG_SEED = [
       {
         "label": "Fabric",
         "value": "Saudi chiffon"
+      },
+      {
+        "label": "Size",
+        "value": "6 inch"
+      },
+      {
+        "label": "Color",
+        "value": "Black"
       }
     ],
     "sizes": [
-      "6 inch",
-      "8 inch"
+      "6 inch"
     ],
-    "colors": [],
+    "colors": [
+      "Black"
+    ],
     "designs": [],
     "stock": null,
     "images": [
@@ -257,7 +266,7 @@ var SADIRA_CATALOG_SEED = [
     ],
     "detailsSource": null,
     "featured": false,
-    "newArrival": false,
+    "newArrival": true,
     "status": "active"
   },
   {

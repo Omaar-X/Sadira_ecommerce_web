@@ -289,25 +289,34 @@
         {
           "label": "Fabric",
           "value": "Saudi chiffon"
+        },
+        {
+          "label": "Size",
+          "value": "6 inch"
+        },
+        {
+          "label": "Color",
+          "value": "Black"
         }
       ],
       "sizes": [
-        "6 inch",
-        "8 inch"
+        "6 inch"
       ],
-      "colors": [],
+      "colors": [
+        "Black"
+      ],
       "designs": [],
       "stock": null,
       "photos": [
-        "Niqab 1.jpeg",
-        "Niqab 2.jpeg",
         "Niqab 3.jpeg",
         "Niqab 4.jpeg",
-        "niqab 5.jpeg"
+        "niqab 5.jpeg",
+        "Niqab 1.jpeg",
+        "Niqab 2.jpeg"
       ],
-      "detailsSource": "Niqab 1,2 details.png",
+      "detailsSource": "niqab 3,4,5 price and details.png",
       "featured": false,
-      "newArrival": false,
+      "newArrival": true,
       "status": "active"
     },
     {
