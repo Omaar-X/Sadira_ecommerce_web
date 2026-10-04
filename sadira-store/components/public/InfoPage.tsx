@@ -1,0 +1,9 @@
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import { Breadcrumbs } from "@/components/common/Breadcrumbs";
+import { Container } from "@/components/layout/Container";
+import { ButtonLink } from "@/components/ui/Button";
+import { CUSTOMER_CARE_LINKS, ROUTES } from "@/lib/constants";
+export function InfoPage({ title, intro, children, wide = false }: { title: string; intro: string; children: React.ReactNode; wide?: boolean }) {
+  return <main id="main-content" tabIndex={-1} className="flex-1"><section className="border-b border-line bg-blush/25"><Container className="pt-6 pb-10 md:pt-8 md:pb-14"><Breadcrumbs items={[{ label: "Home", href: ROUTES.home }, { label: title }]} /><div className="mt-8 max-w-2xl"><p className="text-xs tracking-[.2em] text-muted uppercase">The Sadira guide</p><h1 className="mt-4 text-4xl leading-tight sm:text-5xl">{title}</h1><p className="mt-5 text-base leading-relaxed text-muted">{intro}</p></div></Container></section><Container className="py-12 md:py-16">{wide ? children : <div className="mx-auto grid max-w-5xl gap-12 lg:grid-cols-[minmax(0,1fr)_230px] lg:gap-16"><article className="public-reading min-w-0">{children}</article><aside className="h-fit rounded-2xl border border-line bg-white p-6 lg:sticky lg:top-28"><h2 className="text-xl">Here to help</h2><p className="mt-3 text-sm leading-relaxed text-muted">Have a question about a product or your order?</p><ButtonLink href={ROUTES.contact} className="mt-5" fullWidth>Contact Sadira</ButtonLink><nav aria-label="More customer care" className="mt-6 border-t border-line pt-4">{CUSTOMER_CARE_LINKS.filter(link => link.href !== ROUTES.contact).map(link => <Link key={link.href} href={link.href} className="flex min-h-11 items-center justify-between gap-2 text-sm text-muted hover:text-foreground">{link.label}<ArrowRight aria-hidden="true" className="size-3.5" /></Link>)}</nav></aside></div>}</Container></main>;
+}

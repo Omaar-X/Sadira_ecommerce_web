@@ -1,0 +1,12 @@
+.git/
+.next/
+node_modules/
+test-results/
+.env*
+*.tsbuildinfo
+/scripts/
+/catalog/
+/google-apps-script/
+AGENTS.md
+CLAUDE.md
+README.md

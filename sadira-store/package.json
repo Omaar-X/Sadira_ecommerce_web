@@ -1,0 +1,36 @@
+{
+  "name": "sadira-store",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "catalog:prepare": "node scripts/prepare-catalog.mjs && node scripts/generate-inventory-seed.mjs",
+    "inventory:seed": "node scripts/generate-inventory-seed.mjs",
+    "test:operations": "node scripts/test-order-operations.mjs",
+    "test:admin": "node scripts/test-admin.mjs",
+    "test:admin:browser": "node scripts/test-admin-browser.mjs",
+    "test:public:browser": "node scripts/test-public-browser.mjs",
+    "test:catalog": "node scripts/test-catalog.mjs",
+    "test:catalog:browser": "node scripts/test-catalog-browser.mjs",
+    "test:mobile:browser": "node scripts/test-live-mobile.mjs"
+  },
+  "dependencies": {
+    "lucide-react": "^1.49.0",
+    "next": "16.3.7",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.7",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}

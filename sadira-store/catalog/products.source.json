@@ -1,0 +1,634 @@
+{
+  "sourceDir": "../Image",
+  "categories": [
+    {
+      "name": "Abaya",
+      "slug": "abaya",
+      "folder": "Abaya",
+      "idCode": "ABAYA"
+    },
+    {
+      "name": "Bag",
+      "slug": "bag",
+      "folder": "Bag",
+      "idCode": "BAG"
+    },
+    {
+      "name": "Burka",
+      "slug": "burka",
+      "folder": "Borka",
+      "idCode": "BURKA"
+    },
+    {
+      "name": "Bracelet",
+      "slug": "bracelet",
+      "folder": "Bracelet",
+      "idCode": "BRACELET"
+    },
+    {
+      "name": "Niqab",
+      "slug": "niqab",
+      "folder": "Niqab",
+      "idCode": "NIQAB"
+    },
+    {
+      "name": "Scarf",
+      "slug": "scarf",
+      "folder": "Scarf",
+      "idCode": "SCARF"
+    },
+    {
+      "name": "Sunglasses",
+      "slug": "sunglasses",
+      "folder": "sunglass",
+      "idCode": "SUNGLASS"
+    },
+    {
+      "name": "Combo",
+      "slug": "combo",
+      "folder": "Combo",
+      "idCode": "COMBO"
+    },
+    {
+      "name": "Perfume",
+      "slug": "perfume",
+      "folder": "Perfume",
+      "idCode": "PERFUME"
+    }
+  ],
+  "products": [
+    {
+      "id": "SAD-ABAYA-001",
+      "category": "abaya",
+      "name": "Abaya Elara",
+      "slug": "abaya-elara",
+      "price": 1550,
+      "salePrice": null,
+      "description": "A perfect blend of modesty, comfort & elegance. Designed with a flowy silhouette and beautiful ruffle detailing on the sleeves—perfect for an effortlessly aesthetic look.",
+      "features": [],
+      "details": [
+        {
+          "label": "Fabric",
+          "value": "Premium textured fabric"
+        },
+        {
+          "label": "Design",
+          "value": "Flowy & comfortable fit"
+        },
+        {
+          "label": "Sleeves",
+          "value": "Elegant ruffle detailing"
+        },
+        {
+          "label": "Includes",
+          "value": "Abaya + Hijab"
+        }
+      ],
+      "sizes": [
+        "50",
+        "52",
+        "54",
+        "56"
+      ],
+      "colors": [
+        "Black",
+        "Dark Green",
+        "Beige"
+      ],
+      "designs": [],
+      "stock": null,
+      "photos": [
+        "Abaya 2.jpeg",
+        "Abaya 3.jpeg",
+        "Abaya 1.jpeg"
+      ],
+      "detailsSource": "abaya1,2,3 detaisl.png",
+      "featured": false,
+      "newArrival": false,
+      "status": "active"
+    },
+    {
+      "id": "SAD-ABAYA-002",
+      "category": "abaya",
+      "name": "Abaya Haya",
+      "slug": "abaya-haya",
+      "price": 1250,
+      "salePrice": null,
+      "description": "",
+      "features": [],
+      "details": [
+        {
+          "label": "Fabric",
+          "value": "Premium Jafran"
+        },
+        {
+          "label": "Work",
+          "value": "Embroidery"
+        },
+        {
+          "label": "Colour",
+          "value": "Off-white & coffee"
+        },
+        {
+          "label": "Includes",
+          "value": "Abaya only"
+        }
+      ],
+      "sizes": [
+        "50",
+        "52",
+        "54",
+        "56"
+      ],
+      "colors": [
+        "Off-white & coffee"
+      ],
+      "designs": [],
+      "stock": null,
+      "photos": [
+        "Abaya 4.jpeg",
+        "Abaya 5.jpeg"
+      ],
+      "detailsSource": "Abaya 4,5 details.png",
+      "featured": false,
+      "newArrival": false,
+      "status": "active"
+    },
+    {
+      "id": "SAD-ABAYA-003",
+      "category": "abaya",
+      "name": "Abaya Zahra (زهراء)",
+      "slug": "abaya-zahra",
+      "price": 1999,
+      "salePrice": null,
+      "description": "A timeless expression of modesty and elegance. Crafted with premium details to make every moment graceful and effortlessly beautiful.",
+      "features": [],
+      "details": [
+        {
+          "label": "Fabric",
+          "value": "Premium Dubai Cherry fabric"
+        },
+        {
+          "label": "Work",
+          "value": "Elegant Karchupi lace work"
+        },
+        {
+          "label": "Fit",
+          "value": "Soft, flowing & comfortable fit"
+        },
+        {
+          "label": "Set includes",
+          "value": "Abaya, Hijab, Niqab"
+        }
+      ],
+      "sizes": [
+        "50",
+        "52",
+        "54",
+        "56"
+      ],
+      "colors": [],
+      "designs": [],
+      "stock": null,
+      "photos": [
+        "Abaya 8.jpeg",
+        "Abaya 6.jpeg",
+        "Abaya 7.jpeg"
+      ],
+      "detailsSource": "Abaya 6,7,8 details.png",
+      "featured": false,
+      "newArrival": false,
+      "status": "active"
+    },
+    {
+      "id": "SAD-BAG-001",
+      "category": "bag",
+      "name": "Shoulder Bag",
+      "slug": "shoulder-bag",
+      "price": 550,
+      "salePrice": null,
+      "description": "",
+      "features": [],
+      "details": [],
+      "sizes": [],
+      "colors": [],
+      "designs": [],
+      "stock": null,
+      "photos": [
+        "bag 1.jpeg"
+      ],
+      "detailsSource": "bag 1 deatils.png",
+      "featured": false,
+      "newArrival": false,
+      "status": "active"
+    },
+    {
+      "id": "SAD-BAG-002",
+      "category": "bag",
+      "name": "YSL Embroidery Bag",
+      "slug": "ysl-embroidery-bag",
+      "price": 550,
+      "salePrice": null,
+      "description": "",
+      "features": [],
+      "details": [],
+      "sizes": [],
+      "colors": [],
+      "designs": [],
+      "stock": null,
+      "photos": [
+        "Bag 2.jpeg"
+      ],
+      "detailsSource": "Bag 2 details.png",
+      "featured": false,
+      "newArrival": false,
+      "status": "active"
+    },
+    {
+      "id": "SAD-BRACELET-001",
+      "category": "bracelet",
+      "name": "MK Bracelet Watch",
+      "slug": "mk-bracelet-watch",
+      "price": 850,
+      "salePrice": null,
+      "description": "",
+      "features": [
+        "Elegant & classy bracelet design",
+        "Premium finishing",
+        "Perfect for both daily & party wear"
+      ],
+      "details": [],
+      "sizes": [],
+      "colors": [],
+      "designs": [],
+      "stock": null,
+      "photos": [
+        "Bracelet 1.jpeg",
+        "Bracele 2.jpeg",
+        "Bracelet 3.jpeg"
+      ],
+      "detailsSource": "Bracelet details.png",
+      "featured": false,
+      "newArrival": false,
+      "status": "active"
+    },
+    {
+      "id": "SAD-NIQAB-001",
+      "category": "niqab",
+      "name": "Premium Saudi Chiffon Niqab",
+      "slug": "premium-saudi-chiffon-niqab",
+      "price": 200,
+      "salePrice": null,
+      "description": "A touch of modesty, a whole lot of elegance.",
+      "features": [
+        "Soft",
+        "Comfortable",
+        "Elegant"
+      ],
+      "details": [
+        {
+          "label": "Fabric",
+          "value": "Saudi chiffon"
+        }
+      ],
+      "sizes": [
+        "6 inch",
+        "8 inch"
+      ],
+      "colors": [],
+      "designs": [],
+      "stock": null,
+      "photos": [
+        "Niqab 1.jpeg",
+        "Niqab 2.jpeg",
+        "Niqab 3.jpeg",
+        "Niqab 4.jpeg",
+        "niqab 5.jpeg"
+      ],
+      "detailsSource": "Niqab 1,2 details.png",
+      "featured": false,
+      "newArrival": false,
+      "status": "active"
+    },
+    {
+      "id": "SAD-SCARF-001",
+      "category": "scarf",
+      "name": "Brand Scarf Collection",
+      "slug": "brand-scarf-collection",
+      "price": 599,
+      "salePrice": null,
+      "description": "হালকা, মসৃণ আর একদম সাটিন সিল্কের মতো ফিনিশ। যা আপনার প্রতিদিনের লুকে এনে দেবে একটুখানি এলিগ্যান্স।",
+      "features": [
+        "সহজে ক্যারি করা যায়",
+        "সফট ও কমফোর্টেবল",
+        "হিজাব ও ওড়না—দুইভাবেই পারফেক্ট"
+      ],
+      "details": [
+        {
+          "label": "Quality",
+          "value": "Premium class"
+        },
+        {
+          "label": "Material",
+          "value": "Samu silk"
+        },
+        {
+          "label": "Size",
+          "value": "Long 180 cm / height 90 cm"
+        },
+        {
+          "label": "Made in",
+          "value": "China"
+        }
+      ],
+      "sizes": [
+        "180 × 90 cm"
+      ],
+      "colors": [],
+      "designs": [
+        {
+          "label": "Design 1",
+          "photo": "Scarf 1.jpeg"
+        },
+        {
+          "label": "Design 2",
+          "photo": "Scarf 2.jpeg"
+        },
+        {
+          "label": "Design 3",
+          "photo": "Scarf 3.jpeg"
+        },
+        {
+          "label": "Design 4",
+          "photo": "Scarf 4.jpeg"
+        }
+      ],
+      "stock": 4000,
+      "photos": [
+        "Scarf 1.jpeg",
+        "Scarf 2.jpeg",
+        "Scarf 3.jpeg",
+        "Scarf 4.jpeg"
+      ],
+      "detailsSource": "scarf 1,2,3,4 deatils.png",
+      "featured": false,
+      "newArrival": false,
+      "status": "active"
+    },
+    {
+      "id": "SAD-SUNGLASS-001",
+      "category": "sunglasses",
+      "name": "Prada Milano Sunglasses",
+      "slug": "prada-milano-sunglasses",
+      "price": 750,
+      "salePrice": null,
+      "description": "",
+      "features": [],
+      "details": [],
+      "sizes": [],
+      "colors": [],
+      "designs": [],
+      "stock": 12,
+      "photos": [
+        "Prada Milano Sunglass 1.jpeg",
+        "Prada Milano Sunglass 2.jpeg",
+        "Prada Milano Sunglass 3.jpeg",
+        "Prada Milano Sunglass 4.jpeg"
+      ],
+      "detailsSource": "Details.png",
+      "featured": false,
+      "newArrival": false,
+      "status": "active"
+    },
+    {
+      "salePrice": null,
+      "features": [],
+      "details": [
+        {
+          "label": "Set includes",
+          "value": "Koti, inner, hijab, niqab, inner cap"
+        },
+        {
+          "label": "Koti",
+          "value": "Georgette fabric — ৳ 1,500 separately"
+        },
+        {
+          "label": "Inner",
+          "value": "Cherry fabric — ৳ 690 separately"
+        },
+        {
+          "label": "Hijab",
+          "value": "Georgette fabric — ৳ 300 separately"
+        },
+        {
+          "label": "Inner cap",
+          "value": "৳ 140 separately"
+        },
+        {
+          "label": "Niqab",
+          "value": "BMW fabric — ৳ 350 separately"
+        }
+      ],
+      "sizes": [
+        "59",
+        "52",
+        "54",
+        "56"
+      ],
+      "colors": [
+        "Black"
+      ],
+      "designs": [],
+      "stock": null,
+      "featured": false,
+      "newArrival": true,
+      "status": "active",
+      "id": "SAD-ABAYA-004",
+      "category": "abaya",
+      "name": "Abaya Hiraa",
+      "slug": "abaya-hiraa",
+      "price": 2700,
+      "description": "A full abaya set in black, including koti, inner, hijab, niqab and inner cap.",
+      "photos": [
+        "Abaya Hiraaa 1.jpeg",
+        "Abaya Hiraaa 2.jpeg"
+      ],
+      "detailsSource": "Abaya Hiraa price.png"
+    },
+    {
+      "salePrice": null,
+      "features": [],
+      "details": [],
+      "sizes": [
+        "52",
+        "54",
+        "56"
+      ],
+      "colors": [
+        "Black",
+        "Dust Pink",
+        "Blue",
+        "Brown"
+      ],
+      "designs": [],
+      "stock": null,
+      "featured": false,
+      "newArrival": true,
+      "status": "active",
+      "id": "SAD-ABAYA-005",
+      "category": "abaya",
+      "name": "Shirt Abaya",
+      "slug": "shirt-abaya",
+      "price": 1200,
+      "description": "",
+      "photos": [
+        "Shirt abaya 1.jpeg",
+        "Shirt abaya 2.jpeg",
+        "Shirt abaya 3.jpeg",
+        "Shirt abaya 4.jpeg",
+        "Shirt abaya 5.jpeg",
+        "shirt abaya 6.jpeg",
+        "Shirt abaya 7.jpeg",
+        "shirt Abaya 8.jpeg",
+        "Shirt Abaya 9.jpeg",
+        "Shirt abaya 10.jpeg"
+      ],
+      "detailsSource": "Shirt abaya price.png"
+    },
+    {
+      "salePrice": null,
+      "features": [
+        "Premium finish",
+        "Elegant design",
+        "Perfect for every occasion"
+      ],
+      "details": [],
+      "sizes": [],
+      "colors": [],
+      "designs": [],
+      "stock": null,
+      "featured": false,
+      "newArrival": true,
+      "status": "active",
+      "id": "SAD-BRACELET-002",
+      "category": "bracelet",
+      "name": "MK Signature Watch",
+      "slug": "mk-signature-watch",
+      "price": 750,
+      "description": "A timeless statement of elegance, crafted for those who love to stand out.",
+      "photos": [
+        "MK Signature Watch  1.jpeg",
+        "MK Signature Watch 2.jpeg",
+        "MK Signature Watch 3.jpeg"
+      ],
+      "detailsSource": "Mk watch price.png"
+    },
+    {
+      "salePrice": null,
+      "features": [],
+      "details": [
+        {
+          "label": "Set includes",
+          "value": "Abaya + Hijab"
+        },
+        {
+          "label": "Abaya separately",
+          "value": "৳ 1,200"
+        },
+        {
+          "label": "Hijab separately",
+          "value": "৳ 440"
+        }
+      ],
+      "sizes": [],
+      "colors": [],
+      "designs": [],
+      "stock": null,
+      "featured": false,
+      "newArrival": true,
+      "status": "active",
+      "id": "SAD-COMBO-001",
+      "category": "combo",
+      "name": "Abaya & Hijab Combo",
+      "slug": "abaya-hijab-combo",
+      "price": 1500,
+      "description": "An abaya and hijab set, available together as a combo.",
+      "photos": [
+        "Abaya Hijab combo 1.jpeg",
+        "Hijab 1.jpeg",
+        "Hijab 2.jpeg"
+      ],
+      "detailsSource": "price.png"
+    },
+    {
+      "salePrice": null,
+      "features": [],
+      "details": [
+        {
+          "label": "Type",
+          "value": "Master copy"
+        }
+      ],
+      "sizes": [],
+      "colors": [],
+      "designs": [],
+      "stock": null,
+      "featured": false,
+      "newArrival": true,
+      "status": "active",
+      "id": "SAD-PERFUME-001",
+      "category": "perfume",
+      "name": "Gucci Mini Perfume (Master Copy)",
+      "slug": "gucci-mini-perfume-master-copy",
+      "price": 450,
+      "description": "Mini perfume, sold as a master copy.",
+      "photos": [
+        "Gucci mini perfume master copy.jpeg",
+        "Gucci mini perfume master copy2.jpeg"
+      ],
+      "detailsSource": "Screenshot 2026-10-04 162045.png"
+    },
+    {
+      "salePrice": null,
+      "features": [],
+      "details": [
+        {
+          "label": "Material",
+          "value": "PU leather"
+        },
+        {
+          "label": "Width",
+          "value": "33 cm"
+        },
+        {
+          "label": "Length",
+          "value": "27 cm"
+        },
+        {
+          "label": "Made in",
+          "value": "China"
+        }
+      ],
+      "sizes": [],
+      "colors": [
+        "Black"
+      ],
+      "designs": [],
+      "stock": null,
+      "featured": false,
+      "newArrival": true,
+      "status": "active",
+      "id": "SAD-BAG-003",
+      "category": "bag",
+      "name": "PU Leather Bag",
+      "slug": "pu-leather-bag",
+      "price": 1400,
+      "description": "PU leather bag, available in black.",
+      "photos": [
+        "Bag Pu leather.jpeg",
+        "bag pu leather 2.jpeg"
+      ],
+      "detailsSource": "leather bag detyails.png"
+    }
+  ]
+}

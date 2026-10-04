@@ -1,0 +1,158 @@
+@import "tailwindcss";
+
+/*
+ * Sadira brand palette. Change colours here only — every utility
+ * (bg-primary, text-muted, border-line, …) reads from these variables.
+ */
+:root {
+  --sadira-background: #fff9fa;
+  --sadira-blush: #fce7ed;
+  --sadira-rose: #e98fa9;
+  --sadira-rose-dark: #a34663;
+  --sadira-ink: #171717;
+  --sadira-muted: #6b6467;
+  --sadira-line: #f0dde3;
+  --sadira-white: #ffffff;
+
+  color-scheme: light;
+}
+
+@theme inline {
+  --color-background: var(--sadira-background);
+  --color-blush: var(--sadira-blush);
+  --color-primary: var(--sadira-rose);
+  --color-primary-dark: var(--sadira-rose-dark);
+  --color-foreground: var(--sadira-ink);
+  --color-muted: var(--sadira-muted);
+  --color-line: var(--sadira-line);
+  --color-white: var(--sadira-white);
+
+  /* Font variables are injected by next/font in app/layout.tsx */
+  --font-sans: var(--font-inter), var(--font-bengali), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-playfair), var(--font-bengali), ui-serif, Georgia, serif;
+}
+
+@theme {
+  /* max-w-site */
+  --container-site: 1440px;
+
+  /* Homepage hero headline: ~42px at 320px → ~88px at 1440px+ */
+  --text-hero: clamp(2.625rem, 1.9rem + 3.6vw, 5.5rem);
+  --text-hero--line-height: 1.02;
+  --text-hero--letter-spacing: -0.015em;
+
+  /* Fluid type scale: text-display, text-heading, text-subheading */
+  --text-display: clamp(2.75rem, 1.6rem + 5.2vw, 6rem);
+  --text-display--line-height: 1.05;
+  --text-display--letter-spacing: -0.01em;
+  --text-heading: clamp(1.75rem, 1.35rem + 1.8vw, 2.75rem);
+  --text-heading--line-height: 1.15;
+  --text-subheading: clamp(1.0625rem, 1rem + 0.4vw, 1.375rem);
+  --text-subheading--line-height: 1.5;
+
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  /*
+   * Prevent page scrolling while the menu drawer or search overlay is open,
+   * keeping the scrollbar's space so the page doesn't shift sideways.
+   */
+  html:has(dialog.sadira-dialog[open]) {
+    overflow: hidden;
+    scrollbar-gutter: stable;
+  }
+
+  body {
+    @apply bg-background font-sans text-foreground antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .sadira-dialog {
+    overscroll-behavior: contain;
+  }
+
+  .sadira-dialog > div {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-serif font-medium text-balance;
+  }
+
+  ::selection {
+    @apply bg-blush text-foreground;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-primary-dark;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /*
+   * Modal <dialog> used by the mobile menu and search overlay. Keeps the
+   * dialog rendered while it closes so its panel can animate out, and fades
+   * the backdrop. Panels animate with group-open: utilities.
+   */
+  .sadira-dialog {
+    transition:
+      display 300ms allow-discrete,
+      overlay 300ms allow-discrete;
+  }
+
+  .sadira-dialog::backdrop {
+    background-color: rgb(23 23 23 / 0);
+    transition:
+      background-color 300ms ease,
+      display 300ms allow-discrete,
+      overlay 300ms allow-discrete;
+  }
+
+  .sadira-dialog[open]::backdrop {
+    background-color: rgb(23 23 23 / 0.35);
+  }
+
+  @starting-style {
+    .sadira-dialog[open]::backdrop {
+      background-color: rgb(23 23 23 / 0);
+    }
+  }
+
+
+  .skip-link {
+    position: fixed;
+    top: 12px;
+    left: 16px;
+    z-index: 100;
+    transform: translateY(-180%);
+    border-radius: 8px;
+    background: var(--sadira-ink);
+    color: white;
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+  .skip-link:focus { transform: translateY(0); }
+  #main-content { scroll-margin-top: 110px; }
+  .public-reading { font-size: 15px; line-height: 1.85; }
+  .public-reading h2 { margin-top: 36px; font-size: 26px; line-height: 1.25; }
+  .public-reading h2:first-child { margin-top: 0; }
+  .public-reading h3 { line-height: 1.4; }
+  .public-reading p { margin-top: 16px; color: var(--sadira-muted); }
+  .public-reading a:not([class]) { color: var(--sadira-ink); text-decoration: underline; text-underline-offset: 4px; }
+  .public-eyebrow { font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--sadira-muted); }
+}

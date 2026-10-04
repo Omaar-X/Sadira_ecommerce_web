@@ -1,0 +1,65 @@
+[
+  {
+    "id": "CAT-ABAYA",
+    "name": "Abaya",
+    "slug": "abaya",
+    "image": "/catalog/abaya/sad-abaya-001/1.jpeg",
+    "description": null
+  },
+  {
+    "id": "CAT-BAG",
+    "name": "Bag",
+    "slug": "bag",
+    "image": "/catalog/bag/sad-bag-001/1.jpeg",
+    "description": null
+  },
+  {
+    "id": "CAT-BURKA",
+    "name": "Burka",
+    "slug": "burka",
+    "image": null,
+    "description": null
+  },
+  {
+    "id": "CAT-BRACELET",
+    "name": "Bracelet",
+    "slug": "bracelet",
+    "image": "/catalog/bracelet/sad-bracelet-001/1.jpeg",
+    "description": null
+  },
+  {
+    "id": "CAT-NIQAB",
+    "name": "Niqab",
+    "slug": "niqab",
+    "image": "/catalog/niqab/sad-niqab-001/1.jpeg",
+    "description": null
+  },
+  {
+    "id": "CAT-SCARF",
+    "name": "Scarf",
+    "slug": "scarf",
+    "image": "/catalog/scarf/sad-scarf-001/1.jpeg",
+    "description": null
+  },
+  {
+    "id": "CAT-SUNGLASS",
+    "name": "Sunglasses",
+    "slug": "sunglasses",
+    "image": "/catalog/sunglasses/sad-sunglass-001/1.jpeg",
+    "description": null
+  },
+  {
+    "id": "CAT-COMBO",
+    "name": "Combo",
+    "slug": "combo",
+    "image": "/catalog/combo/sad-combo-001/1.jpeg",
+    "description": null
+  },
+  {
+    "id": "CAT-PERFUME",
+    "name": "Perfume",
+    "slug": "perfume",
+    "image": "/catalog/perfume/sad-perfume-001/1.jpeg",
+    "description": null
+  }
+]
