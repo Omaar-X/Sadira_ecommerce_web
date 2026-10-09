@@ -40,7 +40,7 @@
     {
       "name": "Sunglasses",
       "slug": "sunglasses",
-      "folder": "sunglass",
+      "folder": "Accseories",
       "idCode": "SUNGLASS"
     },
     {
@@ -54,6 +54,12 @@
       "slug": "perfume",
       "folder": "Perfume",
       "idCode": "PERFUME"
+    },
+    {
+      "name": "Hair Accessories",
+      "slug": "hair-accessories",
+      "folder": "Accseories",
+      "idCode": "CLIP"
     }
   ],
   "products": [
@@ -670,6 +676,223 @@
       "featured": false,
       "newArrival": true,
       "status": "active"
+    },
+    {
+      "salePrice": null,
+      "features": [],
+      "details": [
+        {
+          "label": "Fabric",
+          "value": "Cherry fabric"
+        }
+      ],
+      "sizes": [
+        "50",
+        "52",
+        "54",
+        "56"
+      ],
+      "colors": [
+        "Black",
+        "Brown"
+      ],
+      "designs": [],
+      "stock": null,
+      "featured": false,
+      "newArrival": true,
+      "status": "active",
+      "id": "SAD-ABAYA-006",
+      "category": "abaya",
+      "name": "Cherry Fabrics Plain Abaya",
+      "slug": "cherry-fabrics-plain-abaya",
+      "price": 999,
+      "description": "Plain abaya in cherry fabric, available in black and brown.",
+      "photos": [
+        "Cherry fabrics plain abaya.jpeg",
+        "Cherry fabrics plain abaya2.jpeg"
+      ],
+      "detailsSource": "Cheery febric plain abaya details.png"
+    },
+    {
+      "salePrice": null,
+      "features": [],
+      "details": [],
+      "sizes": [
+        "56"
+      ],
+      "colors": [
+        "Olive"
+      ],
+      "designs": [],
+      "stock": 15,
+      "featured": false,
+      "newArrival": true,
+      "status": "active",
+      "id": "SAD-ABAYA-007",
+      "category": "abaya",
+      "name": "Olive Abaya",
+      "slug": "olive-abaya",
+      "price": 850,
+      "description": "Olive abaya, available in size 56.",
+      "photos": [
+        "Olive Abaya 1.jpeg",
+        "Olive Abaya 2.jpeg"
+      ],
+      "detailsSource": "Olive details.png"
+    },
+    {
+      "salePrice": null,
+      "features": [],
+      "details": [
+        {
+          "label": "Fabric",
+          "value": "Popcorn fabric"
+        }
+      ],
+      "sizes": [
+        "50",
+        "52",
+        "54",
+        "56"
+      ],
+      "colors": [],
+      "designs": [],
+      "stock": null,
+      "featured": false,
+      "newArrival": true,
+      "status": "active",
+      "id": "SAD-ABAYA-008",
+      "category": "abaya",
+      "name": "Popcorn Fabrics Abaya",
+      "slug": "popcorn-fabrics-abaya",
+      "price": 850,
+      "description": "Textured popcorn fabric abaya in sizes 50, 52, 54 and 56.",
+      "photos": [
+        "Popcorn Fabrics Abaya 1.jpeg",
+        "Popcorn Fabrics Abaya 2.jpeg",
+        "Popcorn Fabrics Abaya 3.jpeg"
+      ],
+      "detailsSource": "popcorn fabric detaisl.png"
+    },
+    {
+      "salePrice": null,
+      "features": [],
+      "details": [
+        {
+          "label": "Dimensions",
+          "value": "180 × 85 cm"
+        }
+      ],
+      "sizes": [],
+      "colors": [],
+      "designs": [
+        {
+          "label": "Print 1",
+          "photo": "Leopard Print Hijab 1.jpeg"
+        },
+        {
+          "label": "Print 2",
+          "photo": "Leopard Print Hijab 2.jpeg"
+        }
+      ],
+      "stock": null,
+      "featured": false,
+      "newArrival": true,
+      "status": "active",
+      "id": "SAD-SCARF-002",
+      "category": "scarf",
+      "name": "Leopard Print Hijab",
+      "slug": "leopard-print-hijab",
+      "price": 399,
+      "description": "Leopard print hijab measuring 180 × 85 cm.",
+      "photos": [
+        "Leopard Print Hijab 1.jpeg",
+        "Leopard Print Hijab 2.jpeg"
+      ],
+      "detailsSource": "Leopard Deatails.png"
+    },
+    {
+      "salePrice": null,
+      "features": [
+        "Abaya",
+        "Leopard print hijab",
+        "Bag",
+        "Nose niqab",
+        "Inner cap",
+        "Pocket perfume",
+        "Sunflower clip"
+      ],
+      "details": [],
+      "sizes": [],
+      "colors": [],
+      "designs": [
+        {
+          "label": "Set 1",
+          "photo": "Combo Abaya bag Niqab 1.jpeg"
+        },
+        {
+          "label": "Set 2",
+          "photo": "Combo Abaya bag Niqab  clip scarf 2.jpeg"
+        },
+        {
+          "label": "Set 3",
+          "photo": "Combo Abaya bag Niqab  clip scarf 3.jpeg"
+        },
+        {
+          "label": "Set 4",
+          "photo": "Combo Abaya bag Niqab  clip scarf 4.jpeg"
+        },
+        {
+          "label": "Set 5",
+          "photo": "Combo Abaya bag Niqab  clip scarf 5.jpeg"
+        }
+      ],
+      "stock": null,
+      "featured": false,
+      "newArrival": true,
+      "status": "active",
+      "id": "SAD-COMBO-002",
+      "category": "combo",
+      "name": "Abaya & Accessories Combo",
+      "slug": "abaya-accessories-combo",
+      "price": 1999,
+      "description": "A complete combo with abaya, leopard print hijab, bag, nose niqab, inner cap, pocket perfume and sunflower clip.",
+      "photos": [
+        "Combo Abaya bag Niqab 1.jpeg",
+        "Combo Abaya bag Niqab  clip scarf 2.jpeg",
+        "Combo Abaya bag Niqab  clip scarf 3.jpeg",
+        "Combo Abaya bag Niqab  clip scarf 4.jpeg",
+        "Combo Abaya bag Niqab  clip scarf 5.jpeg"
+      ],
+      "detailsSource": "Combo abaya bag details.png"
+    },
+    {
+      "salePrice": null,
+      "features": [],
+      "details": [
+        {
+          "label": "Order limit",
+          "value": "Maximum 2 pieces per order"
+        }
+      ],
+      "sizes": [],
+      "colors": [],
+      "designs": [],
+      "stock": null,
+      "featured": false,
+      "newArrival": true,
+      "status": "active",
+      "id": "SAD-CLIP-001",
+      "category": "hair-accessories",
+      "name": "Sunflower Hair Clip",
+      "slug": "sunflower-hair-clip",
+      "price": 99,
+      "description": "Sunflower hair clip. Maximum order: 2 pieces.",
+      "photos": [
+        "Sunflower clip.jpeg",
+        "Sunflower clip2 .jpeg"
+      ],
+      "detailsSource": "Clip deatisl.png"
     }
   ]
 }

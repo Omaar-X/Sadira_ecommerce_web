@@ -359,7 +359,7 @@
       "/catalog/sunglasses/sad-sunglass-001/3.jpeg",
       "/catalog/sunglasses/sad-sunglass-001/4.jpeg"
     ],
-    "detailsSource": "sunglass/Details.png",
+    "detailsSource": "Accseories/Details.png",
     "featured": false,
     "newArrival": false,
     "status": "active"
@@ -629,6 +629,236 @@
       "/catalog/bag/sad-bag-004/4.jpeg"
     ],
     "detailsSource": "Bag/sholuder bag details.png",
+    "featured": false,
+    "newArrival": true,
+    "status": "active"
+  },
+  {
+    "id": "SAD-ABAYA-006",
+    "name": "Cherry Fabrics Plain Abaya",
+    "slug": "cherry-fabrics-plain-abaya",
+    "category": "Abaya",
+    "categorySlug": "abaya",
+    "price": 999,
+    "salePrice": null,
+    "description": "Plain abaya in cherry fabric, available in black and brown.",
+    "features": [],
+    "details": [
+      {
+        "label": "Fabric",
+        "value": "Cherry fabric"
+      }
+    ],
+    "sizes": [
+      "50",
+      "52",
+      "54",
+      "56"
+    ],
+    "colors": [
+      "Black",
+      "Brown"
+    ],
+    "designs": [],
+    "stock": null,
+    "images": [
+      "/catalog/abaya/sad-abaya-006/1.jpeg",
+      "/catalog/abaya/sad-abaya-006/2.jpeg"
+    ],
+    "detailsSource": "Abaya/Cheery febric plain abaya details.png",
+    "featured": false,
+    "newArrival": true,
+    "status": "active"
+  },
+  {
+    "id": "SAD-ABAYA-007",
+    "name": "Olive Abaya",
+    "slug": "olive-abaya",
+    "category": "Abaya",
+    "categorySlug": "abaya",
+    "price": 850,
+    "salePrice": null,
+    "description": "Olive abaya, available in size 56.",
+    "features": [],
+    "details": [],
+    "sizes": [
+      "56"
+    ],
+    "colors": [
+      "Olive"
+    ],
+    "designs": [],
+    "stock": 15,
+    "images": [
+      "/catalog/abaya/sad-abaya-007/1.jpeg",
+      "/catalog/abaya/sad-abaya-007/2.jpeg"
+    ],
+    "detailsSource": "Abaya/Olive details.png",
+    "featured": false,
+    "newArrival": true,
+    "status": "active"
+  },
+  {
+    "id": "SAD-ABAYA-008",
+    "name": "Popcorn Fabrics Abaya",
+    "slug": "popcorn-fabrics-abaya",
+    "category": "Abaya",
+    "categorySlug": "abaya",
+    "price": 850,
+    "salePrice": null,
+    "description": "Textured popcorn fabric abaya in sizes 50, 52, 54 and 56.",
+    "features": [],
+    "details": [
+      {
+        "label": "Fabric",
+        "value": "Popcorn fabric"
+      }
+    ],
+    "sizes": [
+      "50",
+      "52",
+      "54",
+      "56"
+    ],
+    "colors": [],
+    "designs": [],
+    "stock": null,
+    "images": [
+      "/catalog/abaya/sad-abaya-008/1.jpeg",
+      "/catalog/abaya/sad-abaya-008/2.jpeg",
+      "/catalog/abaya/sad-abaya-008/3.jpeg"
+    ],
+    "detailsSource": "Abaya/popcorn fabric detaisl.png",
+    "featured": false,
+    "newArrival": true,
+    "status": "active"
+  },
+  {
+    "id": "SAD-SCARF-002",
+    "name": "Leopard Print Hijab",
+    "slug": "leopard-print-hijab",
+    "category": "Scarf",
+    "categorySlug": "scarf",
+    "price": 399,
+    "salePrice": null,
+    "description": "Leopard print hijab measuring 180 × 85 cm.",
+    "features": [],
+    "details": [
+      {
+        "label": "Dimensions",
+        "value": "180 × 85 cm"
+      }
+    ],
+    "sizes": [],
+    "colors": [],
+    "designs": [
+      {
+        "id": "SAD-SCARF-002-D1",
+        "label": "Print 1",
+        "image": "/catalog/scarf/sad-scarf-002/1.jpeg"
+      },
+      {
+        "id": "SAD-SCARF-002-D2",
+        "label": "Print 2",
+        "image": "/catalog/scarf/sad-scarf-002/2.jpeg"
+      }
+    ],
+    "stock": null,
+    "images": [
+      "/catalog/scarf/sad-scarf-002/1.jpeg",
+      "/catalog/scarf/sad-scarf-002/2.jpeg"
+    ],
+    "detailsSource": "Scarf/Leopard Deatails.png",
+    "featured": false,
+    "newArrival": true,
+    "status": "active"
+  },
+  {
+    "id": "SAD-COMBO-002",
+    "name": "Abaya & Accessories Combo",
+    "slug": "abaya-accessories-combo",
+    "category": "Combo",
+    "categorySlug": "combo",
+    "price": 1999,
+    "salePrice": null,
+    "description": "A complete combo with abaya, leopard print hijab, bag, nose niqab, inner cap, pocket perfume and sunflower clip.",
+    "features": [
+      "Abaya",
+      "Leopard print hijab",
+      "Bag",
+      "Nose niqab",
+      "Inner cap",
+      "Pocket perfume",
+      "Sunflower clip"
+    ],
+    "details": [],
+    "sizes": [],
+    "colors": [],
+    "designs": [
+      {
+        "id": "SAD-COMBO-002-D1",
+        "label": "Set 1",
+        "image": "/catalog/combo/sad-combo-002/1.jpeg"
+      },
+      {
+        "id": "SAD-COMBO-002-D2",
+        "label": "Set 2",
+        "image": "/catalog/combo/sad-combo-002/2.jpeg"
+      },
+      {
+        "id": "SAD-COMBO-002-D3",
+        "label": "Set 3",
+        "image": "/catalog/combo/sad-combo-002/3.jpeg"
+      },
+      {
+        "id": "SAD-COMBO-002-D4",
+        "label": "Set 4",
+        "image": "/catalog/combo/sad-combo-002/4.jpeg"
+      },
+      {
+        "id": "SAD-COMBO-002-D5",
+        "label": "Set 5",
+        "image": "/catalog/combo/sad-combo-002/5.jpeg"
+      }
+    ],
+    "stock": null,
+    "images": [
+      "/catalog/combo/sad-combo-002/1.jpeg",
+      "/catalog/combo/sad-combo-002/2.jpeg",
+      "/catalog/combo/sad-combo-002/3.jpeg",
+      "/catalog/combo/sad-combo-002/4.jpeg",
+      "/catalog/combo/sad-combo-002/5.jpeg"
+    ],
+    "detailsSource": "Combo/Combo abaya bag details.png",
+    "featured": false,
+    "newArrival": true,
+    "status": "active"
+  },
+  {
+    "id": "SAD-CLIP-001",
+    "name": "Sunflower Hair Clip",
+    "slug": "sunflower-hair-clip",
+    "category": "Hair Accessories",
+    "categorySlug": "hair-accessories",
+    "price": 99,
+    "salePrice": null,
+    "description": "Sunflower hair clip. Maximum order: 2 pieces.",
+    "features": [],
+    "details": [
+      {
+        "label": "Order limit",
+        "value": "Maximum 2 pieces per order"
+      }
+    ],
+    "sizes": [],
+    "colors": [],
+    "designs": [],
+    "stock": null,
+    "images": [
+      "/catalog/hair-accessories/sad-clip-001/1.jpeg",
+      "/catalog/hair-accessories/sad-clip-001/2.jpeg"
+    ],
+    "detailsSource": "Accseories/Clip deatisl.png",
     "featured": false,
     "newArrival": true,
     "status": "active"

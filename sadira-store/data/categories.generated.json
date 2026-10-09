@@ -61,5 +61,12 @@
     "slug": "perfume",
     "image": "/catalog/perfume/sad-perfume-001/1.jpeg",
     "description": null
+  },
+  {
+    "id": "CAT-CLIP",
+    "name": "Hair Accessories",
+    "slug": "hair-accessories",
+    "image": "/catalog/hair-accessories/sad-clip-001/1.jpeg",
+    "description": null
   }
 ]

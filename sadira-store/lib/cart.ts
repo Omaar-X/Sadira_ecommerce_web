@@ -1,3 +1,4 @@
+import { PRODUCT_ORDER_LIMITS } from "@/lib/orderLimits";
 import { getEffectivePrice } from "@/lib/pricing";
 import type { CartItem, ProductSelection } from "@/types/cart";
 import type { PublicProduct } from "@/types/product";
@@ -22,10 +23,11 @@ export const UNTRACKED_STOCK_MAX_QUANTITY = 10;
  *   `live`       — current stock from live inventory when known (overrides the
  *                  catalog; null = untracked). Can be 0 (out of stock).
  */
-export function maxOrderQuantity(item: Pick<CartItem, "stock">, live?: { stock: number | null }): number {
+export function maxOrderQuantity(item: Pick<CartItem, "stock"> & { id?: string; productId?: string }, live?: { stock: number | null }): number {
   const stock = live ? live.stock : item.stock;
   const limit = stock ?? UNTRACKED_STOCK_MAX_QUANTITY;
-  return item.stock === null ? Math.min(limit, UNTRACKED_STOCK_MAX_QUANTITY) : limit;
+  const purchaseLimit = PRODUCT_ORDER_LIMITS[item.id ?? item.productId ?? ""] ?? Infinity;
+  return Math.min(purchaseLimit, item.stock === null ? Math.min(limit, UNTRACKED_STOCK_MAX_QUANTITY) : limit);
 }
 
 /**

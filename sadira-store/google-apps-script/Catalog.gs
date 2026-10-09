@@ -1,5 +1,5 @@
 /** Product editing + private Drive storage. Deploy alongside Code.gs and CatalogSeed.gs. */
-var CATALOG_CATEGORIES = { abaya: 'Abaya', bag: 'Bag', burka: 'Burka', bracelet: 'Bracelet', niqab: 'Niqab', scarf: 'Scarf', sunglasses: 'Sunglasses', combo: 'Combo', perfume: 'Perfume' };
+var CATALOG_CATEGORIES = { abaya: 'Abaya', bag: 'Bag', burka: 'Burka', bracelet: 'Bracelet', niqab: 'Niqab', scarf: 'Scarf', sunglasses: 'Sunglasses', combo: 'Combo', perfume: 'Perfume', 'hair-accessories': 'Hair Accessories' };
 var CATALOG_IMAGE_RE = /^\/api\/catalog\/images\/([A-Za-z0-9_-]{10,150})$/;
 var CATALOG_LOCAL_IMAGE_RE = /^\/catalog\/[a-z0-9/-]+\.(jpeg|jpg|png|webp)$/;
 

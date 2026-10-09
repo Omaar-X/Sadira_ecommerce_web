@@ -50,7 +50,7 @@ export const ASSET_PATHS = {
 export const CATEGORY_GROUPS = {
   accessories: {
     name: "Accessories",
-    categorySlugs: ["bag", "bracelet", "sunglasses", "perfume"],
+    categorySlugs: ["bag", "bracelet", "sunglasses", "perfume", "hair-accessories"],
   },
 } as const satisfies Record<string, { name: string; categorySlugs: readonly string[] }>;
 

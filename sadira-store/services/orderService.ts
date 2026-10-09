@@ -1,3 +1,4 @@
+import { PRODUCT_ORDER_LIMITS } from "@/lib/orderLimits";
 import { maxOrderQuantity } from "@/lib/cart";
 import { EMPTY_CHECKOUT_FORM, normalizeCheckoutDetails, validateCheckout } from "@/lib/checkout";
 import { getDeliveryCharge, getOrderingStatus } from "@/lib/delivery";
@@ -166,6 +167,12 @@ async function revalidateItems(
       unitPrice,
       lineTotal: unitPrice * item.quantity,
     });
+  }
+
+  for (const [productId, product] of products) {
+    const limit = PRODUCT_ORDER_LIMITS[productId];
+    const quantity = items.filter(item => item.productId === productId).reduce((sum, item) => sum + item.quantity, 0);
+    if (limit !== undefined && quantity > limit) invalid.push(`${product.name}: maximum ${limit} pieces per order.`);
   }
 
   if (invalid.length > 0) {

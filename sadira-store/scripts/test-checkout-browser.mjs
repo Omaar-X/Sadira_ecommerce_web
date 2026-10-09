@@ -90,6 +90,23 @@ try {
     console.log(`PASS ${area}: subtotal 1198 + delivery ${charge} = ${1198 + charge}, COD saved, success navigation (${width}px)`);
     await context.close();
   }
+  const page = await browser.newPage();
+  await page.goto(origin + '/product/sunflower-hair-clip');
+  const increase = page.getByRole('button', { name: 'Increase quantity', exact: true });
+  await increase.click();
+  assert.equal(await increase.isDisabled(), true, 'Clip selector must stop at two');
+  const form = { name: 'Limit QA', phone: '01700000000', alternativePhone: '', email: '', division: 'Dhaka', district: 'Dhaka', area: 'Test area', address: 'Simulator test address', postalCode: '', deliveryArea: 'inside-dhaka', paymentMethod: 'cod', note: '' };
+  for (const quantities of [[3], [2, 1]]) {
+    const response = await page.request.post(origin + '/api/orders', { data: {
+      requestId: randomBytes(16).toString('hex'), mode: 'cart', form,
+      items: quantities.map(quantity => ({ productId: 'SAD-CLIP-001', quantity, size: null, color: null, design: null, displayedUnitPrice: 99 })),
+    } });
+    const result = await response.json();
+    assert.equal(result.success, false);
+    assert.match(JSON.stringify(result), /maximum 2 pieces per order/);
+  }
+  await page.close();
+  console.log('PASS clip quantity cap and server rejection of split-line bypass');
   assert.equal(payloads.length, 2);
   console.log('PASS both delivery areas use published defaults without environment overrides');
 } catch (error) { console.error(output.slice(-4000)); throw error; }

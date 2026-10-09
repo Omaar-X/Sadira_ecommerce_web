@@ -24,5 +24,11 @@ var SADIRA_PRODUCT_SEED = [
   { productId: "SAD-COMBO-001", productName: "Abaya & Hijab Combo", stock: null },
   { productId: "SAD-PERFUME-001", productName: "Gucci Mini Perfume (Master Copy)", stock: null },
   { productId: "SAD-BAG-003", productName: "PU Leather Bag", stock: null },
-  { productId: "SAD-BAG-004", productName: "Floral Charm Shoulder Bag", stock: null }
+  { productId: "SAD-BAG-004", productName: "Floral Charm Shoulder Bag", stock: null },
+  { productId: "SAD-ABAYA-006", productName: "Cherry Fabrics Plain Abaya", stock: null },
+  { productId: "SAD-ABAYA-007", productName: "Olive Abaya", stock: 15 },
+  { productId: "SAD-ABAYA-008", productName: "Popcorn Fabrics Abaya", stock: null },
+  { productId: "SAD-SCARF-002", productName: "Leopard Print Hijab", stock: null },
+  { productId: "SAD-COMBO-002", productName: "Abaya & Accessories Combo", stock: null },
+  { productId: "SAD-CLIP-001", productName: "Sunflower Hair Clip", stock: null }
 ];
