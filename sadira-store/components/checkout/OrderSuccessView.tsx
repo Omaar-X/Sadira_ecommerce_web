@@ -56,6 +56,7 @@ export function OrderSuccessView() {
         </div>
       </div>
 
+      {order.trackingToken && <section className="mt-6 rounded-xl border border-line bg-white p-5"><h2 className="text-lg">Save your private access code</h2><p className="mt-2 text-sm text-muted">Keep this with your order ID to check status later. Do not share it publicly.</p><code className="mt-3 block break-all text-xs select-all">{order.trackingToken}</code><ButtonLink href="/track-order" className="mt-4">Track this order</ButtonLink></section>}
       <section aria-labelledby="order-details-heading" className="mt-8 rounded-2xl border border-line bg-white p-5 sm:p-6">
         <h2 id="order-details-heading" className="font-serif text-xl">
           Order Details

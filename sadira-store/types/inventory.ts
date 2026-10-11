@@ -1,4 +1,5 @@
 export type InventoryStatus = "active" | "inactive";
+export interface VariantStock { size: string | null; color: string | null; design: string | null; stock: number; active: boolean }
 
 /**
  * Live stock of one product, from the Google Sheets Products tab (via
@@ -15,6 +16,7 @@ export interface LiveInventoryItem {
   status: InventoryStatus;
   /** Bangladesh time, "YYYY-MM-DD HH:mm:ss" ("" when unknown). */
   updatedAt: string;
+  variants?: VariantStock[];
 }
 
 export type InventoryApiResponse = { success: true; products: LiveInventoryItem[] } | { success: false };

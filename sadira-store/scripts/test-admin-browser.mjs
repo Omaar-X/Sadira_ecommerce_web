@@ -26,7 +26,7 @@ const mock=http.createServer(async(req,res)=>{
 await new Promise(resolve=>mock.listen(0,'127.0.0.1',resolve));
 const origin='http://127.0.0.1:3113';
 const username='simulator-operator';const password=randomBytes(24).toString('hex');const sessionSecret=randomBytes(32).toString('hex');
-const child=spawn(process.execPath,['node_modules/next/dist/bin/next','dev','--hostname','127.0.0.1','--port','3113'],{windowsHide:true,env:{...process.env,NODE_ENV:'development',ADMIN_USERNAME:username,ADMIN_PASSWORD:password,ADMIN_SESSION_SECRET:sessionSecret,APPS_SCRIPT_ORDER_URL:`http://127.0.0.1:${mock.address().port}`,APPS_SCRIPT_SECRET:secret,DELIVERY_CHARGE_INSIDE_DHAKA:'60',DELIVERY_CHARGE_OUTSIDE_DHAKA:'120'},stdio:['ignore','pipe','pipe']});
+const child=spawn(process.execPath,['node_modules/next/dist/bin/next','dev','--hostname','127.0.0.1','--port','3113'],{windowsHide:true,env:{...process.env,NODE_ENV:'development',SADIRA_TEST_BUILD_DIR:'.next-tests/admin',ADMIN_USERNAME:username,ADMIN_PASSWORD:password,ADMIN_SESSION_SECRET:sessionSecret,APPS_SCRIPT_ORDER_URL:`http://127.0.0.1:${mock.address().port}`,APPS_SCRIPT_SECRET:secret,DELIVERY_CHARGE_INSIDE_DHAKA:'60',DELIVERY_CHARGE_OUTSIDE_DHAKA:'120'},stdio:['ignore','pipe','pipe']});
 let output='';child.stdout.on('data',data=>{output+=data;});child.stderr.on('data',data=>{output+=data;});
 let browser;
 const post=(action,body,headers={})=>fetch(origin+'/api/admin/'+action,{method:'POST',headers:{origin,'Content-Type':'application/json',...headers},body:JSON.stringify(body)});

@@ -520,9 +520,7 @@ var SADIRA_CATALOG_SEED = [
     "designs": [],
     "stock": null,
     "images": [
-      "/catalog/combo/sad-combo-001/1.jpeg",
-      "/catalog/combo/sad-combo-001/2.jpeg",
-      "/catalog/combo/sad-combo-001/3.jpeg"
+      "/catalog/combo/sad-combo-001/1.jpeg"
     ],
     "detailsSource": null,
     "featured": false,
@@ -858,6 +856,30 @@ var SADIRA_CATALOG_SEED = [
     "images": [
       "/catalog/hair-accessories/sad-clip-001/1.jpeg",
       "/catalog/hair-accessories/sad-clip-001/2.jpeg"
+    ],
+    "detailsSource": null,
+    "featured": false,
+    "newArrival": true,
+    "status": "active"
+  },
+  {
+    "id": "SAD-SCARF-003",
+    "name": "Leopard Hijab",
+    "slug": "leopard-hijab",
+    "category": "Scarf",
+    "categorySlug": "scarf",
+    "price": 440,
+    "salePrice": null,
+    "description": "A standalone hijab with a leopard print.",
+    "features": [],
+    "details": [],
+    "sizes": [],
+    "colors": [],
+    "designs": [],
+    "stock": null,
+    "images": [
+      "/catalog/scarf/sad-scarf-003/1.jpeg",
+      "/catalog/scarf/sad-scarf-003/2.jpeg"
     ],
     "detailsSource": null,
     "featured": false,

@@ -22,5 +22,6 @@ export async function POST(request: Request) {
   if (!mime) return reply({ success: false, message: "Use a JPEG, PNG or WebP photo." }, 400);
   const result = await callAppsScript({ action: "adminUploadProductImage", uploadKey, mime, data: bytes.toString("base64") }, { timeoutMs: 60000, label: "upload-product-image" });
   if (result?.success === true && typeof result.image === "string") return reply({ success: true, image: result.image });
+  if (result?.code === "CATALOG_NOT_READY") return reply({ success: false, message: "Run setupCatalog() in the Google Apps Script editor before uploading photos." }, 409);
   return reply({ success: false, message: "Photo could not be uploaded. Check Google Drive permissions and the updated Apps Script deployment." }, 502);
 }

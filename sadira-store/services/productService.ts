@@ -1,4 +1,4 @@
-import { getCatalogProducts } from "@/services/catalogService";
+import { getBrowsableCatalogProducts, getCatalogProducts } from "@/services/catalogService";
 import { CATEGORY_GROUPS, type CategoryGroupSlug } from "@/lib/constants";
 import { resolveStock } from "@/lib/inventory";
 import {
@@ -29,6 +29,11 @@ function take<T>(items: T[], limit?: number): T[] {
 }
 
 async function getVisibleProducts(): Promise<Product[]> {
+  return (await getBrowsableCatalogProducts()).filter((product) => product.status === "active");
+}
+
+/** Strict live catalog for validating and pricing orders: fails rather than falling back. */
+export async function getOrderableProducts(): Promise<Product[]> {
   return (await getCatalogProducts()).filter((product) => product.status === "active");
 }
 

@@ -106,6 +106,8 @@ export interface ConfirmedOrderItem {
 
 /** An order confirmed as saved in Google Sheets (only what the success page needs). */
 export interface ConfirmedOrder {
+  /** Private access code for durable status lookup; never a URL query parameter. */
+  trackingToken?: string;
   orderId: string;
   /** Bangladesh time, "YYYY-MM-DD HH:mm:ss". */
   createdAt: string;
@@ -115,7 +117,7 @@ export interface ConfirmedOrder {
   discount: number;
   total: number;
   paymentMethod: PaymentMethod;
-  orderStatus: "Pending";
+  orderStatus: "Pending" | "Confirmed" | "Processing" | "Shipped" | "Delivered" | "Cancelled";
   customer: { name: string; phone: string };
   delivery: { deliveryArea: DeliveryArea; address: string };
 }
@@ -128,6 +130,7 @@ export type OrderErrorCode =
   | "STOCK_UNAVAILABLE"
   | "PRODUCT_UNAVAILABLE"
   | "ORDERING_UNAVAILABLE"
+  | "RATE_LIMITED"
   | "ORDER_SAVE_FAILED";
 
 export interface PriceChange {

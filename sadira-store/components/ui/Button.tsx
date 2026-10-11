@@ -11,7 +11,7 @@ export type ButtonSize = "sm" | "md" | "lg";
  * #C85E7C) are below 4.5:1 with white text, so rose carries dark text instead.
  */
 const variantClasses: Record<ButtonVariant, string> = {
-  primary: "bg-foreground text-white hover:bg-foreground/85",
+  primary: "bg-foreground text-white shadow-[0_8px_20px_-8px_rgb(23_23_23/0.55)] hover:-translate-y-0.5 hover:bg-foreground/85 hover:shadow-[0_14px_26px_-10px_rgb(163_70_99/0.6)] active:translate-y-0 active:scale-[0.98]",
   secondary: "bg-primary text-foreground hover:bg-primary/80",
   outline: "border border-foreground/80 text-foreground hover:bg-blush",
   ghost: "text-foreground hover:bg-blush",
@@ -39,7 +39,7 @@ export function buttonClassName({
 }: ButtonStyleOptions = {}): string {
   return cn(
     "inline-flex items-center justify-center gap-2 rounded-full font-medium tracking-wide whitespace-nowrap",
-    "transition-colors duration-200 ease-soft select-none",
+    "transition-[transform,box-shadow,background-color,color] duration-300 ease-soft select-none",
     "disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50",
     variantClasses[variant],
     sizeClasses[size],

@@ -1,5 +1,9 @@
 # Sadira order + inventory backend — Google Apps Script + Google Sheets
 
+For the current variant inventory, private tracking, shared rate limits, COD collection,
+rollback protection and backup setup, follow [BACKEND-UPGRADE.md](BACKEND-UPGRADE.md).
+Deploy `Reliability.gs` and `VariantStock.gs` together with the updated `Code.gs` before updating the website.
+
 ```
 Browser → POST /api/orders (Next.js server: validates everything, re-reads prices)
         → Apps Script web app (Code.gs: checks secret + payload; under ONE lock checks live

@@ -1,4 +1,8 @@
 import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
+import collectionImage from "@/public/catalog/abaya/sad-abaya-001/1.jpeg";
 import { Breadcrumbs, type BreadcrumbItem } from "@/components/common/Breadcrumbs";
 import { EmptyState } from "@/components/common/EmptyState";
 import { Container } from "@/components/layout/Container";
@@ -52,26 +56,42 @@ export default async function ShopPage(props: PageProps<"/shop">) {
       <Container className="pt-6 pb-16 md:pt-8 md:pb-24">
         <Breadcrumbs items={breadcrumbs} />
 
-        <header className="mt-6 max-w-2xl md:mt-8">
+        <header className="collection-banner mt-6 md:mt-8">
+          <div className="relative z-10 max-w-xl">
           <p className="flex items-center gap-3 text-xs font-medium tracking-[0.28em] text-foreground uppercase">
             <span aria-hidden="true" className="h-px w-8 bg-primary-dark" />
             Sadira Collection
           </p>
           <h1 className="mt-4 text-4xl text-foreground md:text-5xl">{heading}</h1>
           <p className="mt-3 text-sm text-muted md:text-base">{intro}</p>
+          <p className="mt-6 flex items-center gap-3 text-[0.625rem] font-medium tracking-[0.18em] text-primary-dark uppercase"><span className="h-px w-7 bg-primary-dark/40" /> Modest by nature. Yours by choice.</p>
+          </div>
+          <div aria-hidden="true" className="collection-art">
+            <span className="collection-orbit" />
+            <div className="collection-portrait"><Image src={collectionImage} alt="" sizes="240px" className="h-full w-full object-cover" /></div>
+            <span className="collection-note">The Sadira edit <ArrowUpRight className="size-4" /></span>
+          </div>
         </header>
+
+        <nav aria-label="Browse collections" className="collection-shortcuts mt-6 flex gap-2 overflow-x-auto pb-2">
+          {[
+            { name: "All pieces", href: ROUTES.shop, active: !query.category && !query.group && !query.q },
+            ...options.categories.filter(category => ["abaya", "scarf", "niqab", "combo"].includes(category.slug)).map(category => ({ name: category.name, href: ROUTES.shopCategory(category.slug), active: query.category === category.slug })),
+            { name: "Accessories", href: "/shop?group=accessories", active: query.group === "accessories" },
+          ].map(item => <Link key={item.href} href={item.href} aria-current={item.active ? "page" : undefined} className="collection-chip">{item.name}</Link>)}
+        </nav>
 
         <div className="mt-8 md:mt-12 lg:grid lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-12 xl:grid-cols-[260px_minmax(0,1fr)] xl:gap-14">
           <DesktopShopFilters
             query={query}
             options={options}
             candidates={candidates}
-            className="hidden lg:sticky lg:top-28 lg:block lg:max-h-[calc(100dvh-8rem)] lg:self-start lg:overflow-y-auto lg:pr-2"
+            className="filter-surface hidden lg:sticky lg:top-28 lg:block lg:max-h-[calc(100dvh-8rem)] lg:self-start lg:overflow-y-auto"
           />
 
           <div className="min-w-0">
             {/* Toolbar */}
-            <div className="flex items-center justify-between gap-3 border-b border-line pb-4">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line pb-4">
               <div className="flex items-center gap-4">
                 <div className="lg:hidden">
                   <MobileShopFilters query={query} options={options} candidates={candidates} />

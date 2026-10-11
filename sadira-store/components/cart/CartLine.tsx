@@ -24,7 +24,7 @@ export interface CartLineProps {
 /** One cart line: thumbnail, name, chosen options, unit price, quantity, line total, remove. */
 export function CartLine({ item, variant = "compact" }: CartLineProps) {
   const { items, updateQuantity, removeItem } = useCart();
-  const live = useProductStock(item.productId, item.stock);
+  const live = useProductStock(item.productId, item.stock, item);
   const key = cartLineKey(item);
   // Known stock is per product, so the product's other lines (other sizes/designs) use part of it.
   const otherLines =

@@ -11,6 +11,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
 const f = catalogFixture();
 f.ctx.Utilities.formatDate = (_date, _zone, format) => format === 'yyyyMMdd' ? '20261004' : '2026-10-04 18:30:00';
 const secret = randomBytes(32).toString('hex');
+const qaUser = 'backend-test-operator', qaPassword = randomBytes(24).toString('hex'), qaSessionSecret = randomBytes(32).toString('hex');
 f.props.setProperty('APPS_SCRIPT_SECRET', secret);
 const payloads = [];
 const mock = http.createServer(async (request, response) => {
@@ -29,7 +30,7 @@ await new Promise(resolve => mock.listen(0, '127.0.0.1', resolve));
 const origin = 'http://127.0.0.1:3116';
 const child = spawn(process.execPath, ['node_modules/next/dist/bin/next', 'dev', '--hostname', '127.0.0.1', '--port', '3116'], {
   windowsHide: true,
-  env: { ...process.env, NODE_ENV: 'development', APPS_SCRIPT_ORDER_URL: `http://127.0.0.1:${mock.address().port}`, APPS_SCRIPT_SECRET: secret,
+  env: { ...process.env, NODE_ENV: 'development', SADIRA_TEST_BUILD_DIR: '.next-tests/checkout', ADMIN_USERNAME: qaUser, ADMIN_PASSWORD: qaPassword, ADMIN_SESSION_SECRET: qaSessionSecret, APPS_SCRIPT_ORDER_URL: `http://127.0.0.1:${mock.address().port}`, APPS_SCRIPT_SECRET: secret,
     DELIVERY_CHARGE_INSIDE_DHAKA: '', DELIVERY_CHARGE_OUTSIDE_DHAKA: '' },
   stdio: ['ignore', 'pipe', 'pipe'],
 });
@@ -85,8 +86,23 @@ try {
     assert.ok(saved, 'Order must exist before success is displayed');
     assert.equal(Number(saved.total), 1198 + charge);
     assert.equal(saved.payment_method, 'COD');
+    assert.match(result.order.trackingToken, /^[a-f0-9]{64}$/);
+    const submitted = response.request().postDataJSON();
+    const retried = await page.request.post(origin + '/api/orders', { data: submitted });
+    assert.equal((await retried.json()).order.orderId, result.order.orderId);
+    const status = await page.request.post(origin + '/api/orders/status', { data: { orderId: result.order.orderId, token: result.order.trackingToken } });
+    assert.equal(status.status(), 200);
+    const projection = (await status.json()).data;
+    assert.equal(projection.status, 'Pending');
+    assert.equal(Object.hasOwn(projection, 'customer'), false);
+    assert.equal((await page.request.post(origin + '/api/orders/status', { data: { orderId: result.order.orderId, token: '0'.repeat(64) } })).status(), 404);
     assert.equal(await page.evaluate(() => sessionStorage.getItem('sadira-buy-now')), null);
     assert.deepEqual(errors, []);
+    await page.goto(origin + '/track-order');
+    await page.getByLabel('Order ID', { exact: true }).fill(result.order.orderId);
+    await page.getByLabel('Private access code').fill(result.order.trackingToken);
+    await page.getByRole('button', { name: 'Check order status' }).click();
+    await page.getByRole('heading', { name: 'Pending', exact: true }).waitFor();
     console.log(`PASS ${area}: subtotal 1198 + delivery ${charge} = ${1198 + charge}, COD saved, success navigation (${width}px)`);
     await context.close();
   }
@@ -109,6 +125,52 @@ try {
   console.log('PASS clip quantity cap and server rejection of split-line bypass');
   assert.equal(payloads.length, 2);
   console.log('PASS both delivery areas use published defaults without environment overrides');
+  console.log('PASS saved retry recovery, private status API and desktop/mobile tracking form');
+  const adminContext = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
+  const adminPage = await adminContext.newPage();
+  await adminPage.goto(origin + '/admin/login');
+  await adminPage.getByLabel('Username').fill(qaUser);
+  await adminPage.getByLabel('Password', { exact: true }).fill(qaPassword);
+  await adminPage.getByRole('button', { name: 'Sign In', exact: true }).click();
+  await adminPage.waitForURL(origin + '/admin');
+  const skuProduct = JSON.parse(f.rows('Catalog')[0].product_json);
+  await adminPage.goto(origin + '/admin/products/' + skuProduct.id);
+  await adminPage.getByRole('button', { name: 'Load / reload variants' }).click();
+  const counts = adminPage.getByRole('spinbutton', { name: /^Stock for / });
+  await counts.first().fill('3');
+  await adminPage.getByLabel('Stock adjustment reason', { exact: true }).fill('Test physical count');
+  await adminPage.getByRole('button', { name: 'Save variant counts' }).click();
+  await adminPage.getByText('Variant stock saved. Reload to see current quantities.', { exact: true }).waitFor();
+  assert.equal(f.rows('Products').find(r => r.product_id === skuProduct.id).stock, 3);
+  const live = await (await adminPage.request.get(origin + '/api/inventory')).json();
+  assert.equal(live.products.find(p => p.productId === skuProduct.id).variants.some(v => v.stock === 3), true);
+  await adminPage.getByRole('button', { name: 'Load / reload variants' }).click();
+  await counts.first().waitFor();
+  fs.mkdirSync('test-results', { recursive: true });
+  await adminPage.screenshot({ path: 'test-results/backend-variants-desktop.png', fullPage: true });
+  const orderId = f.rows('Orders').find(r => r.access_hash).order_id;
+  await adminPage.goto(origin + '/admin/orders/' + orderId);
+  for (const label of ['Confirm Order', 'Mark Processing', 'Mark Shipped', 'Mark Delivered']) {
+    await adminPage.getByRole('button', { name: label, exact: true }).click();
+    await adminPage.getByRole('dialog').getByRole('button', { name: 'Confirm', exact: true }).click();
+    await adminPage.getByRole('dialog').waitFor({ state: 'hidden' });
+  }
+  await adminPage.getByRole('button', { name: 'Record COD Collection', exact: true }).click();
+  await adminPage.getByLabel('Collection note', { exact: true }).fill('Simulator courier collection');
+  await adminPage.getByRole('dialog').getByRole('button', { name: 'Confirm', exact: true }).click();
+  await adminPage.getByText('COD collection recorded.', { exact: true }).waitFor();
+  assert.equal(f.rows('Orders').find(r => r.order_id === orderId).payment_status, 'Paid');
+  assert.equal(f.rows('PaymentTransactions').length, 1);
+  await adminPage.goto(origin + '/admin/backend');
+  await adminPage.getByRole('heading', { name: 'Backend checks passed', exact: true }).waitFor();
+  await adminPage.screenshot({ path: 'test-results/backend-health-desktop.png', fullPage: true });
+  await adminPage.setViewportSize({ width: 390, height: 844 });
+  await adminPage.goto(origin + '/admin/products/' + skuProduct.id);
+  await adminPage.getByRole('button', { name: 'Load / reload variants' }).click();
+  await adminPage.getByRole('spinbutton', { name: /^Stock for / }).first().waitFor();
+  await adminPage.screenshot({ path: 'test-results/backend-variants-mobile.png', fullPage: true });
+  await adminContext.close();
+  console.log('PASS desktop/mobile variant editor, COD collection and backend health UI');
 } catch (error) { console.error(output.slice(-4000)); throw error; }
 finally {
   await browser?.close();

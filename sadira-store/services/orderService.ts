@@ -5,7 +5,8 @@ import { getDeliveryCharge, getOrderingStatus } from "@/lib/delivery";
 import { getEffectivePrice } from "@/lib/pricing";
 import { callAppsScript } from "@/services/appsScript";
 import { invalidateInventoryCache } from "@/services/inventoryService";
-import { getProducts } from "@/services/productService";
+import { getOrderableProducts } from "@/services/productService";
+import { orderAccess } from "@/lib/orderAccess";
 import type {
   CheckoutDraftItem,
   CheckoutFormValues,
@@ -110,7 +111,7 @@ async function revalidateItems(
   const products = new Map<string, Product>();
   const invalid: string[] = [];
   const priceChanges: PriceChange[] = [];
-  const catalog = new Map((await getProducts()).map(product => [product.id, product]));
+  const catalog = new Map((await getOrderableProducts()).map(product => [product.id, product]));
 
   for (const item of items) {
     const product = catalog.get(item.productId); // one live catalog snapshot for all order lines
@@ -197,10 +198,12 @@ async function revalidateItems(
 // ---- Apps Script -------------------------------------------------------------
 
 type SaveResult =
-  | { ok: true; orderId: string; createdAt: string }
+  | { ok: true; orderId: string; createdAt: string; order?: ConfirmedOrder }
+  | { ok: false; code: "RATE_LIMITED" }
   | { ok: false; code: "INSUFFICIENT_STOCK"; productId: string; available: number }
   | { ok: false; code: "PRODUCT_UNAVAILABLE"; productId: string }
   | { ok: false; code: "CATALOG_CHANGED"; productId: string }
+  | { ok: false; code: "VARIANT_UNAVAILABLE"; productId: string }
   | { ok: false; code: "FAILED" };
 
 async function saveToAppsScript(payload: Record<string, unknown>, productIds: Set<string>): Promise<SaveResult> {
@@ -208,8 +211,9 @@ async function saveToAppsScript(payload: Record<string, unknown>, productIds: Se
   if (!data) return { ok: false, code: "FAILED" };
 
   if (data.success === true && typeof data.orderId === "string" && ORDER_ID.test(data.orderId)) {
-    return { ok: true, orderId: data.orderId, createdAt: typeof data.createdAt === "string" ? data.createdAt : "" };
+    return { ok: true, orderId: data.orderId, createdAt: typeof data.createdAt === "string" ? data.createdAt : "", order: data.order as ConfirmedOrder | undefined };
   }
+  if (data.code === "RATE_LIMITED") return { ok: false, code: "RATE_LIMITED" };
   // Stock answers are only trusted for products that are actually in this order.
   const productId = typeof data.productId === "string" && productIds.has(data.productId) ? data.productId : null;
   if (data.code === "INSUFFICIENT_STOCK" && productId) {
@@ -218,6 +222,7 @@ async function saveToAppsScript(payload: Record<string, unknown>, productIds: Se
   }
   if (data.code === "PRODUCT_UNAVAILABLE" && productId) return { ok: false, code: "PRODUCT_UNAVAILABLE", productId };
   if (data.code === "CATALOG_CHANGED" && productId) return { ok: false, code: "CATALOG_CHANGED", productId };
+  if (data.code === "VARIANT_UNAVAILABLE" && productId) return { ok: false, code: "VARIANT_UNAVAILABLE", productId };
 
   // Log the outcome only — no payload, secret or customer details.
   console.error("[orders] Apps Script did not save the order.");
@@ -227,7 +232,9 @@ async function saveToAppsScript(payload: Record<string, unknown>, productIds: Se
 /** Apps Script stock rejection → customer-facing error, plus the live stock for the bag's warnings. */
 function stockError(result: Extract<SaveResult, { ok: false }>, products: Map<string, Product>): OrderError | null {
   if (result.code === "FAILED") return null;
+  if (result.code === "RATE_LIMITED") return { code: "RATE_LIMITED", message: "Too many order attempts. Please wait 15 minutes or contact Sadira for help." };
   if (result.code === "CATALOG_CHANGED") return { code: "INVALID_ITEMS", message: "A product changed while your order was being placed. Reopen the product page and add it to your bag again." };
+  if (result.code === "VARIANT_UNAVAILABLE") return { code: "INVALID_ITEMS", message: "The selected size, color or design is no longer available in this quantity. Reopen the product and choose an available option." };
   const name = products.get(result.productId)?.name ?? "An item";
   if (result.code === "PRODUCT_UNAVAILABLE") {
     const update: LiveInventoryItem = {
@@ -263,6 +270,11 @@ export async function placeOrder(body: unknown): Promise<PlaceOrderResult> {
   const request = parseOrderRequest(body);
   if (!request) return fail(400, { code: "BAD_REQUEST", message: "We couldn't read your order. Please try again." });
 
+  const access = orderAccess(request.requestId, request);
+  const recovered = await callAppsScript({ action: "recoverOrder", requestId: request.requestId, accessHash: access.hash }, { timeoutMs: APPS_SCRIPT_TIMEOUT_MS, label: "order-recovery" });
+  if (recovered?.success !== true) return fail(recovered?.code === "RATE_LIMITED" ? 429 : 503, { code: recovered?.code === "RATE_LIMITED" ? "RATE_LIMITED" : "ORDERING_UNAVAILABLE", message: "Order status could not be checked safely. Please retry with the same details or contact Sadira." });
+  if (recovered.found === true && recovered.order && typeof recovered.order === "object") return { ok: true, order: { ...(recovered.order as ConfirmedOrder), trackingToken: access.token } };
+
   const fieldErrors = validateCheckout(request.form);
   if (Object.keys(fieldErrors).length > 0) {
     return fail(400, { code: "VALIDATION_ERROR", message: "Please check your details and try again.", fieldErrors });
@@ -281,12 +293,14 @@ export async function placeOrder(body: unknown): Promise<PlaceOrderResult> {
 
   const saved = await saveToAppsScript({
     requestId: request.requestId,
+    accessHash: access.hash,
     customer: details.customer,
     delivery: details.delivery,
     items: checked.lines.map((line) => ({
       productId: line.productId,
       productName: line.name,
       productSlug: line.slug,
+      image: line.image,
       category: checked.products.get(line.productId)!.category,
       size: line.size,
       color: line.color,
@@ -307,14 +321,16 @@ export async function placeOrder(body: unknown): Promise<PlaceOrderResult> {
     const error = stockError(saved, checked.products);
     if (!error) return fail(502, SAVE_FAILED);
     invalidateInventoryCache(); // the display cache was out of date
-    return fail(409, error);
+    return fail(error.code === "RATE_LIMITED" ? 429 : 409, error);
   }
   invalidateInventoryCache(); // stock changed
+  if (saved.order) return { ok: true, order: { ...saved.order, trackingToken: access.token } };
 
   const { delivery, customer } = details;
   return {
     ok: true,
     order: {
+      trackingToken: access.token,
       orderId: saved.orderId,
       createdAt: saved.createdAt,
       items: checked.lines,

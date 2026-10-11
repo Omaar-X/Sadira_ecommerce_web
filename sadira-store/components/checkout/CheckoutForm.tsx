@@ -25,6 +25,7 @@ import {
 import type { DeliveryCharges, OrderingStatus } from "@/lib/delivery";
 import { saveConfirmedOrder } from "@/lib/orderHandoff";
 import { cn, formatPrice } from "@/lib/utils";
+import { orderAttemptId, clearOrderAttempt } from "@/lib/orderAttempt";
 import type { CartItem } from "@/types/cart";
 import type {
   CheckoutErrors,
@@ -86,10 +87,10 @@ export function CheckoutForm({ items, mode, backLink, deliveryCharges, ordering,
     };
   }
 
-  function requestIdFor(body: Omit<OrderRequest, "requestId">): string {
+  async function requestIdFor(body: Omit<OrderRequest, "requestId">): Promise<string> {
     const signature = JSON.stringify(body);
     if (request.current?.signature !== signature) {
-      request.current = { signature, id: crypto.randomUUID() };
+      request.current = { signature, id: await orderAttemptId(body) };
     }
     return request.current.id;
   }
@@ -123,14 +124,13 @@ export function CheckoutForm({ items, mode, backLink, deliveryCharges, ordering,
     }
 
     const body = { mode, form: values, items: toDraftItems(items) };
-    const payload: OrderRequest = { requestId: requestIdFor(body), ...body };
-
     inFlight.current = true;
     setSubmitting(true);
     setFeedback(null);
 
     let data: OrderApiResponse | null = null;
     try {
+      const payload: OrderRequest = { requestId: await requestIdFor(body), ...body };
       const response = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -151,6 +151,7 @@ export function CheckoutForm({ items, mode, backLink, deliveryCharges, ordering,
     if (data.success) {
       // Saved in Google Sheets — only now hand off, clear, and move on.
       saveConfirmedOrder(data.order);
+      clearOrderAttempt();
       refreshInventory(); // stock just changed
       onOrderPlaced();
       if (mode === "cart") clearCart();

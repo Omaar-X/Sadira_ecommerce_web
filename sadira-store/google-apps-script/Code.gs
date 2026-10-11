@@ -40,11 +40,11 @@ var SHEET_HEADERS = {
     'alternative_phone', 'email', 'division', 'district', 'area', 'full_address',
     'postal_code', 'delivery_area', 'subtotal', 'delivery_charge', 'discount', 'total',
     'payment_method', 'payment_status', 'order_status', 'customer_note', 'whatsapp_confirmation',
-    'status_updated_at', 'status_note', 'cancelled_at', 'cancel_reason', 'restock_status'
+    'status_updated_at', 'status_note', 'cancelled_at', 'cancel_reason', 'restock_status', 'access_hash'
   ],
   OrderItems: [
     'order_item_id', 'order_id', 'product_id', 'product_name', 'product_slug', 'category',
-    'size', 'color', 'design', 'quantity', 'unit_price', 'line_total'
+    'size', 'color', 'design', 'quantity', 'unit_price', 'line_total', 'product_image'
   ],
   Customers: [
     'customer_id', 'name', 'phone', 'alternative_phone', 'email', 'last_address', 'division',
@@ -52,13 +52,15 @@ var SHEET_HEADERS = {
   ],
   // Live inventory is separate from product content, preserving stock on edits.
   Products: ['product_id', 'product_name', 'track_stock', 'stock', 'status', 'updated_at'],
+  ProductVariants: ['variant_id', 'product_id', 'variant_key', 'size', 'color', 'design', 'stock', 'status', 'updated_at'],
   Catalog: ['product_id', 'slug', 'product_json', 'revision', 'updated_at'],
   CatalogImages: ['upload_key', 'file_id', 'mime', 'created_at'],
   InventoryTransactions: [
     'transaction_id', 'created_at', 'product_id', 'order_id', 'type', 'quantity',
-    'stock_before', 'stock_after', 'note'
+    'stock_before', 'stock_after', 'note', 'variant_key'
   ],
   OrderStatusHistory: ['history_id', 'created_at', 'order_id', 'from_status', 'to_status', 'note', 'source'],
+  PaymentTransactions: ['payment_id', 'created_at', 'order_id', 'method', 'amount', 'type', 'note'],
   // Reserved for a later phase.
   Coupons: []
 };
@@ -73,6 +75,12 @@ function doPost(e) {
     var body = parseBody_(e);
     if (!body) return json_({ success: false, error: 'Invalid request.' });
     if (!isAuthorized_(body.secret)) return json_({ success: false, error: 'Unauthorized.' });
+    if (body.action === 'orderStatus') return json_(readOrderStatus_(body));
+    if (body.action === 'recoverOrder') return json_(recoverOrder_(body));
+    if (body.action === 'adminBackendHealth') return json_(backendHealth_());
+    if (body.action === 'adminLoginLimit') return json_(sharedLoginLimit_());
+    if (body.action === 'adminRecordCOD') return json_(recordCOD_(body));
+    if (body.action === 'adminGetVariants' || body.action === 'adminSaveVariants') return json_(adminVariants_(body));
 
     if (body.action === 'catalog') return json_(readCatalog_());
     if (body.action === 'catalogImage') return json_(readCatalogImage_(body));
@@ -202,6 +210,8 @@ function validatePayload_(b) {
   if (!isText_(d.district, 60) || !isText_(d.area, 80) || !isText_(d.address, 300)) return 'delivery.address';
   if (d.postalCode && !/^\d{4}$/.test(d.postalCode)) return 'delivery.postalCode';
   if (!DELIVERY_AREAS[d.deliveryArea]) return 'delivery.deliveryArea';
+  if (d.deliveryArea === 'inside-dhaka' && (d.division !== 'Dhaka' || ['dhaka', 'dhaka district', 'ঢাকা', 'ঢাকা জেলা'].indexOf(d.district.trim().toLowerCase().replace(/\s+/g, ' ')) === -1)) return 'delivery.deliveryArea';
+  if (b.accessHash !== undefined && !/^[a-f0-9]{64}$/.test(b.accessHash)) return 'accessHash';
 
   if (!Array.isArray(b.items) || b.items.length === 0 || b.items.length > MAX_ITEMS) return 'items';
   var subtotal = 0;
@@ -231,9 +241,6 @@ function createOrder_(b) {
   var ss = getSpreadsheet_();
 
   // Idempotency, fast path: a retry of an already-saved request doesn't wait for the lock.
-  var saved = findExistingOrder_(ss, b.requestId);
-  if (saved) return saved;
-
   var lock = LockService.getScriptLock();
   if (!lock.tryLock(LOCK_TIMEOUT_MS)) throw new Error('Could not obtain the order lock.');
 
@@ -241,8 +248,17 @@ function createOrder_(b) {
     var t = ensureSheets_(ss);
 
     // Idempotency, authoritative: re-check inside the lock (the same request may have just finished).
+    var props = PropertiesService.getScriptProperties();
+    var orderFence = 'ORDER_FENCE_' + b.requestId;
+    if (props.getProperty(orderFence)) return { success: false, code: 'ORDER_RECOVERY_REQUIRED' };
     var existing = findRow_(t.Orders, 'request_id', b.requestId);
-    if (existing) return duplicateResponse_(existing);
+    if (existing) {
+      if (b.accessHash && !equalAccessHash_(String(existing.values.access_hash || ''), b.accessHash)) return { success: false, code: 'REQUEST_CONFLICT' };
+      var duplicate = duplicateResponse_(existing);
+      if (b.accessHash) duplicate.order = confirmedReceipt_(existing.values);
+      return duplicate;
+    }
+    if (b.customer && !orderRateAllowed_(b)) return { success: false, code: 'RATE_LIMITED' };
 
     // Recheck content under the same lock as catalog edits and order writes.
     if (typeof checkCatalogOrder_ === 'function') {
@@ -284,6 +300,16 @@ function createOrder_(b) {
       deductions.push({ product: product, quantity: requested[productId] });
     }
 
+    var variants = variantDeductions_(t, b.items);
+    if (variants.error) return variants.error;
+    for (var vi = 0; vi < variants.deductions.length; vi++) {
+      var managedId = variants.deductions[vi].productId;
+      if (!inventory[managedId] || !inventory[managedId].trackStock) return { success: false, code: 'PRODUCT_UNAVAILABLE', productId: managedId };
+      var matrix = variantRows_(t, managedId);
+      var validMatrix = matrix.every(function (r) { return r.stock !== '' && Number.isSafeInteger(Number(r.stock)) && Number(r.stock) >= 0; });
+      var matrixTotal = matrix.reduce(function (sum, r) { return sum + Number(r.stock); }, 0);
+      if (!validMatrix || matrixTotal !== inventory[managedId].stock) return { success: false, code: 'PRODUCT_UNAVAILABLE', productId: managedId };
+    }
     var now = new Date();
     var createdAt = Utilities.formatDate(now, TIMEZONE, 'yyyy-MM-dd HH:mm:ss');
     var orderId = nextOrderId_(t.Orders, now);
@@ -295,8 +321,11 @@ function createOrder_(b) {
     var undo = []; // reverses each completed write; run newest-first if anything fails
 
     try {
-      undo.push(deleteRowsUndo_(appendRows_(t.Orders, [{
+      props.setProperty(orderFence, JSON.stringify({ products: productIds, created_at: createdAt }));
+      deductions.forEach(function (x) { props.setProperty('INVENTORY_FENCE_' + x.product.productId, JSON.stringify({ requestId: b.requestId, created_at: createdAt })); });
+      appendOperational_(t.Orders, [{
         request_id: b.requestId,
+        access_hash: b.accessHash || '',
         order_id: orderId,
         created_at: createdAt,
         customer_id: customerId,
@@ -322,15 +351,16 @@ function createOrder_(b) {
         status_updated_at: createdAt,
         customer_note: b.note || '',
         whatsapp_confirmation: 'Pending'
-      }])));
+      }], undo);
 
-      undo.push(deleteRowsUndo_(appendRows_(t.OrderItems, b.items.map(function (it, i) {
+      appendOperational_(t.OrderItems, b.items.map(function (it, i) {
         return {
           order_item_id: orderId + '-' + pad_(i + 1, 2),
           order_id: orderId,
           product_id: it.productId,
           product_name: it.productName,
           product_slug: it.productSlug,
+          product_image: it.image || '',
           category: it.category,
           size: it.size || '',
           color: it.color || '',
@@ -339,7 +369,7 @@ function createOrder_(b) {
           unit_price: it.unitPrice,
           line_total: it.lineTotal
         };
-      }))));
+      }), undo);
 
       // Deduct tracked stock — one SALE per product. The row is snapshotted first so a
       // later failure restores the previous stock.
@@ -361,10 +391,11 @@ function createOrder_(b) {
           note: 'Order placed'
         });
       });
+      deductVariants_(t, variants.deductions, orderId, createdAt, undo, transactions);
       if (transactions.length > 0) {
         var firstTx = nextSequence_(t.InventoryTransactions, 'transaction_id', 'INV-');
         transactions.forEach(function (tx, i) { tx.transaction_id = 'INV-' + pad_(firstTx + i, 6); });
-        undo.push(deleteRowsUndo_(appendRows_(t.InventoryTransactions, transactions)));
+        appendOperational_(t.InventoryTransactions, transactions, undo);
       }
 
       var customerFields = {
@@ -389,14 +420,19 @@ function createOrder_(b) {
         customerFields.customer_id = customerId;
         customerFields.first_order_at = createdAt;
         customerFields.total_orders = 1;
-        undo.push(deleteRowsUndo_(appendRows_(t.Customers, [customerFields])));
+        appendOperational_(t.Customers, [customerFields], undo);
       }
 
       SpreadsheetApp.flush();
     } catch (err) {
-      rollback_(undo);
+      if (rollbackOperational_(undo)) {
+        deductions.forEach(function (x) { props.deleteProperty('INVENTORY_FENCE_' + x.product.productId); });
+        props.deleteProperty(orderFence);
+      }
       throw err;
     }
+    deductions.forEach(function (x) { props.deleteProperty('INVENTORY_FENCE_' + x.product.productId); });
+    props.deleteProperty(orderFence);
 
     return { success: true, orderId: orderId, createdAt: createdAt };
   } finally {
@@ -521,6 +557,8 @@ function readInventory_() {
   if (!sheet || sheet.getLastColumn() === 0) return { success: true, products: [] };
   var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0].map(String);
   var inventory = loadInventory_({ sheet: sheet, headers: headers });
+  var variantTable = existingTable_('ProductVariants');
+  var allVariants = variantTable ? records_(variantTable) : [];
   return {
     success: true,
     products: Object.keys(inventory).map(function (id) {
@@ -531,7 +569,8 @@ function readInventory_() {
         // Untracked → null (unknown, NOT zero). A tracked row with invalid stock can't be sold → 0.
         stock: p.trackStock ? (p.stock === null ? 0 : p.stock) : null,
         status: p.status,
-        updatedAt: p.updatedAt
+        updatedAt: p.updatedAt,
+        variants: variantProjection_(allVariants.filter(function (r) { return String(r.product_id) === id; }))
       };
     })
   };
@@ -741,7 +780,7 @@ function cancelOrder(orderId, reason) {
       });
       var audit = records_(t.InventoryTransactions).filter(function (r) { return String(r.order_id) === orderId; });
       // Any prior RESTOCK with a non-cancelled order needs reconciliation, never another credit.
-      if (audit.some(function (r) { return r.type === 'RESTOCK'; })) throw new Error('Prior restock exists');
+      if (audit.some(function (r) { return r.type === 'RESTOCK' || r.type === 'VARIANT_RESTOCK'; })) throw new Error('Prior restock exists');
       var inventory = loadInventory_(t.Products);
       var restores = [];
       Object.keys(quantities).forEach(function (id) {
@@ -766,6 +805,7 @@ function cancelOrder(orderId, reason) {
         updateRow_(t.Products, x.product.row, { stock: x.product.stock + x.quantity, updated_at: now });
         transactions.push({ created_at: now, product_id: x.product.productId, order_id: orderId, type: 'RESTOCK', quantity: x.quantity, stock_before: x.product.stock, stock_after: x.product.stock + x.quantity, note: 'Order cancelled: ' + reason.trim() });
       });
+      restoreVariants_(t, audit, items, orderId, now, undo, transactions);
       if (transactions.length) {
         var seq = nextSequence_(t.InventoryTransactions, 'transaction_id', 'INV-');
         transactions.forEach(function (tx, i) { tx.transaction_id = 'INV-' + pad_(seq + i, 6); });
@@ -883,10 +923,11 @@ function adminAction_(b) {
       var items = records_(t.OrderItems).filter(function (r) { return String(r.order_id) === b.orderId; });
       var tx = records_(t.InventoryTransactions).filter(function (r) { return String(r.order_id) === b.orderId; });
       var inv = loadInventory_(t.Products);
-      data = { order: adminPick_(found.values, SHEET_HEADERS.Orders.filter(function (h) { return h !== 'request_id'; })), items: items.map(function (r) { return adminPick_(r, SHEET_HEADERS.OrderItems); }), history: records_(t.OrderStatusHistory).filter(function (r) { return String(r.order_id) === b.orderId; }).map(function (r) { return adminPick_(r, SHEET_HEADERS.OrderStatusHistory); }), transactions: tx.map(function (r) { return adminPick_(r, SHEET_HEADERS.InventoryTransactions); }), hasTrackedItems: items.some(function (r) { return inv[r.product_id] && inv[r.product_id].trackStock && tx.some(function (x) { return x.product_id === r.product_id && x.type === 'SALE'; }); }) };
+      data = { order: adminPick_(found.values, SHEET_HEADERS.Orders.filter(function (h) { return h !== 'request_id' && h !== 'access_hash'; })), items: items.map(function (r) { return adminPick_(r, SHEET_HEADERS.OrderItems); }), history: records_(t.OrderStatusHistory).filter(function (r) { return String(r.order_id) === b.orderId; }).map(function (r) { return adminPick_(r, SHEET_HEADERS.OrderStatusHistory); }), transactions: tx.map(function (r) { return adminPick_(r, SHEET_HEADERS.InventoryTransactions); }), hasTrackedItems: items.some(function (r) { return inv[r.product_id] && inv[r.product_id].trackStock && tx.some(function (x) { return x.product_id === r.product_id && x.type === 'SALE'; }); }) };
     } else {
       var counts = Object.create(null);
-      records_(t.OrderItems).forEach(function (r) { counts[r.order_id] = (counts[r.order_id] || 0) + Number(r.quantity); });
+      var itemRows = records_(t.OrderItems);
+      itemRows.forEach(function (r) { counts[r.order_id] = (counts[r.order_id] || 0) + Number(r.quantity); });
       var orders = adminNewest_(records_(t.Orders).map(function (r) {
         var order = adminPick_(r, ADMIN_ORDER_FIELDS); order.items = counts[r.order_id] || 0; return order;
       }));
@@ -901,11 +942,32 @@ function adminAction_(b) {
         var today = Utilities.formatDate(new Date(), TIMEZONE, 'yyyy-MM-dd').slice(0, 10);
         var todaysOrders = orders.filter(function (r) { return String(r.created_at).slice(0, 10) === today; });
         var metrics = { 'Today Orders': todaysOrders.length, 'Today Revenue': todaysOrders.filter(function (r) { return r.order_status !== 'Cancelled'; }).reduce(function (sum, r) { return sum + Number(r.total || 0); }, 0) };
-        ['Pending', 'Confirmed', 'Processing', 'Delivered', 'Cancelled'].forEach(function (status) { metrics[status + ' Orders'] = orders.filter(function (r) { return r.order_status === status; }).length; });
+        ORDER_STATUSES.forEach(function (status) { metrics[status + ' Orders'] = orders.filter(function (r) { return r.order_status === status; }).length; });
+        metrics['Collected COD'] = records_(t.PaymentTransactions).filter(function (r) { return r.type === 'COLLECTION'; }).reduce(function (sum, r) { return sum + Number(r.amount); }, 0);
         var lowProducts = getLowStockProducts().products;
         metrics['Low Stock Products'] = lowProducts.filter(function (p) { return p.status === 'Low Stock'; }).length;
         metrics['Out of Stock Products'] = lowProducts.filter(function (p) { return p.status === 'Out of Stock'; }).length;
-        data = { today: today, metrics: metrics, recentOrders: orders.slice(0, 10) };
+        // Charts: last 14 Dhaka days (cancelled orders excluded) and best-selling products.
+        var byDay = Object.create(null), daily = [], cancelledIds = Object.create(null);
+        for (var i = 13; i >= 0; i--) {
+          var day = new Date(new Date(today + 'T00:00:00Z').getTime() - i * 86400000).toISOString().slice(0, 10);
+          byDay[day] = { date: day, orders: 0, revenue: 0 }; daily.push(byDay[day]);
+        }
+        orders.forEach(function (r) {
+          if (r.order_status === 'Cancelled') { cancelledIds[r.order_id] = true; return; }
+          var bucket = byDay[String(r.created_at).slice(0, 10)];
+          if (bucket) { bucket.orders += 1; bucket.revenue += Number(r.total || 0); }
+        });
+        var sold = Object.create(null);
+        itemRows.forEach(function (r) {
+          if (cancelledIds[r.order_id]) return;
+          var key = String(r.product_id);
+          var entry = sold[key] || (sold[key] = { name: String(r.product_name || key), quantity: 0, revenue: 0 });
+          entry.quantity += Number(r.quantity || 0); entry.revenue += Number(r.line_total || 0);
+        });
+        var topProducts = Object.keys(sold).map(function (key) { return sold[key]; })
+          .sort(function (x, y) { return y.quantity - x.quantity || y.revenue - x.revenue; }).slice(0, 5);
+        data = { today: today, metrics: metrics, recentOrders: orders.slice(0, 10), analytics: { daily: daily, topProducts: topProducts } };
       }
     }
     return { success: true, data: data };
@@ -927,6 +989,7 @@ function adminMutateInventory_(b) {
     if (props.getProperty(fenceKey) || props.getProperty('CATALOG_FENCE_' + b.productId)) return { success: false, code: 'ADJUSTMENT_FAILED' };
     var product = loadInventory_(t.Products)[b.productId];
     if (!product) return { success: false, code: 'PRODUCT_NOT_FOUND' };
+    if (b.action !== 'adminSetProductStatus' && variantRows_(t, b.productId).length) return { success: false, code: 'VARIANT_MANAGED' };
     if (b.expectedTracking !== product.trackStock || b.expectedStock !== product.stock || b.expectedStatus !== product.status) return { success: false, code: 'INVENTORY_CHANGED' };
     if (b.action === 'adminAdjustStock' && !product.trackStock) return { success: false, code: 'UNTRACKED_PRODUCT' };
     var fields = {};

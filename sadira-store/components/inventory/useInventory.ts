@@ -3,6 +3,7 @@
 import { useEffect, useSyncExternalStore } from "react";
 import { resolveStock, type ResolvedStock } from "@/lib/inventory";
 import { ensureInventory, inventoryStore, type InventorySnapshot } from "@/lib/inventoryStore";
+import type { VariantStock } from "@/types/inventory";
 
 /**
  * Live inventory for display. Loads /api/inventory on first use and refreshes
@@ -33,6 +34,6 @@ export function useInventory(): InventorySnapshot {
 }
 
 /** One product's stock: live when available, otherwise the catalog value. */
-export function useProductStock(productId: string, catalogStock: number | null): ResolvedStock {
-  return resolveStock(productId, catalogStock, useInventory());
+export function useProductStock(productId: string, catalogStock: number | null, selection?: Pick<VariantStock, "size" | "color" | "design">): ResolvedStock {
+  return resolveStock(productId, catalogStock, useInventory(), selection);
 }

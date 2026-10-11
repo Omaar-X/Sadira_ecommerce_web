@@ -18,12 +18,13 @@ export async function GET() {
   return respond(
     {
       success: true,
-      products: products.map(({ productId, trackStock, stock, status, updatedAt }) => ({
+      products: products.map(({ productId, trackStock, stock, status, updatedAt, variants }) => ({
         productId,
         trackStock,
         stock,
         status,
         updatedAt,
+        variants,
       })),
     },
     200,

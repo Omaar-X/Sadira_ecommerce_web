@@ -4,6 +4,7 @@ import { LiveStockHint } from "@/components/inventory/LiveStockHint";
 import { ProductCardImage } from "@/components/product/ProductCardImage";
 import { ProductPrice } from "@/components/product/ProductPrice";
 import { Badge } from "@/components/ui/Badge";
+import { Tilt } from "@/components/ui/Tilt";
 import { ROUTES } from "@/lib/constants";
 import { getProductBadges } from "@/lib/productDisplay";
 import type { Product } from "@/types/product";
@@ -26,8 +27,9 @@ export function ProductCard({ product, action, imageSizes }: ProductCardProps) {
   const badges = getProductBadges(product).filter((badge) => badge.label !== "Low Stock");
 
   return (
-    <article className="group flex h-full flex-col">
-      <div className="relative aspect-[3/4] overflow-hidden rounded-xl border border-line bg-blush/50 transition-colors duration-300 group-hover:border-primary/60">
+    <Tilt className="h-full" max={5}>
+    <article className="product-surface group flex h-full flex-col">
+      <div className="product-photo depth-photo relative aspect-[3/4] overflow-hidden rounded-xl border border-line bg-blush/50 transition-colors duration-300 group-hover:border-primary/60">
         {/* The photo is a second route to the product; the name link below is the keyboard/screen-reader one. */}
         <Link href={href} tabIndex={-1} aria-hidden="true" className="absolute inset-0">
           <ProductCardImage name={product.name} images={product.images} sizes={imageSizes} />
@@ -50,7 +52,7 @@ export function ProductCard({ product, action, imageSizes }: ProductCardProps) {
 
       </div>
 
-      <div className="flex flex-1 flex-col pt-3 md:pt-4">
+      <div className="flex flex-1 flex-col px-2 pt-3 pb-2 md:px-3 md:pt-4 md:pb-3">
         <p className="text-[0.6875rem] tracking-[0.14em] text-muted uppercase">{product.category}</p>
         <h3 className="mt-1 min-h-[2lh] text-sm leading-snug md:text-base">
           <Link
@@ -67,5 +69,6 @@ export function ProductCard({ product, action, imageSizes }: ProductCardProps) {
         {action && <div className="mt-3">{action}</div>}
       </div>
     </article>
+    </Tilt>
   );
 }

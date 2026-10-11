@@ -1,6 +1,7 @@
 import { placeOrder } from "@/services/orderService";
 import type { OrderApiResponse } from "@/types/checkout";
 import { CatalogLoadError } from "@/services/catalogService";
+import { readJsonBody, RequestBodyError } from "@/lib/requestBody";
 
 /*
  * POST /api/orders — the browser's only way to place an order. Validation,
@@ -24,8 +25,9 @@ export async function POST(request: Request) {
 
   let body: unknown;
   try {
-    body = await request.json();
-  } catch {
+    body = await readJsonBody(request, MAX_BODY_BYTES);
+  } catch (error) {
+    if (error instanceof RequestBodyError && error.status === 413) return respond({ success: false, code: "BAD_REQUEST", message: error.message }, 413);
     return respond({ success: false, code: "BAD_REQUEST", message: "We couldn't read your order. Please try again." }, 400);
   }
 
@@ -37,5 +39,5 @@ export async function POST(request: Request) {
   }
   return result.ok
     ? respond({ success: true, order: result.order }, 201)
-    : respond({ success: false, ...result.error }, result.status);
+    : Response.json({ success: false, ...result.error }, { status: result.status, headers: { "Cache-Control": "no-store", ...(result.status === 429 ? { "Retry-After": "900" } : {}) } });
 }

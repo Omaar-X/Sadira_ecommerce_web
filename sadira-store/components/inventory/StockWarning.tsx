@@ -12,7 +12,7 @@ import type { CartItem } from "@/types/cart";
  * unavailable. Advisory only — Apps Script makes the final check at Place Order.
  */
 export function StockWarning({ item, items, className }: { item: CartItem; items: CartItem[]; className?: string }) {
-  const resolved = useProductStock(item.productId, item.stock);
+  const resolved = useProductStock(item.productId, item.stock, item);
   const warning = getStockWarning(item, items, resolved);
   if (!warning) return null;
   return (

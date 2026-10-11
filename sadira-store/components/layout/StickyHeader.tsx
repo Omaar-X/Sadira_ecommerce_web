@@ -24,7 +24,7 @@ export function StickyHeader({ children }: { children: ReactNode }) {
       <div ref={sentinelRef} aria-hidden="true" />
       <header
         className={cn(
-          "sticky top-0 z-40 border-b border-line bg-white transition-shadow duration-300",
+          "sticky top-0 z-40 border-b border-line bg-white/85 backdrop-blur-xl transition-shadow duration-300",
           stuck && "shadow-[0_2px_16px_rgb(23_23_23/0.05)]",
         )}
       >

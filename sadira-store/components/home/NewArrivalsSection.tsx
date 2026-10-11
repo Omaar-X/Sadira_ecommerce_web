@@ -45,7 +45,7 @@ export async function NewArrivalsSection() {
         </div>
 
         {products.length > 0 ? (
-          <ul className="mt-8 grid grid-cols-2 gap-x-3 gap-y-9 sm:gap-x-5 md:mt-12 lg:grid-cols-4 lg:gap-x-6">
+          <ul className="reveal mt-8 grid grid-cols-2 gap-x-3 gap-y-9 sm:gap-x-5 md:mt-12 lg:grid-cols-4 lg:gap-x-6">
             {products.map((product) => (
               <li key={product.id}>
                 <ProductCard product={product} />

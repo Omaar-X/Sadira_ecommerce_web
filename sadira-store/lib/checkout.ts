@@ -1,5 +1,6 @@
 import { calculateCartSubtotal } from "@/lib/cart";
 import { normalizeBangladeshiPhone } from "@/lib/phone";
+import { deliveryZoneError } from "@/lib/deliveryZone";
 import type { CartItem } from "@/types/cart";
 import type {
   CheckoutDraftItem,
@@ -118,6 +119,8 @@ export function validateCheckout(values: CheckoutFormValues): CheckoutErrors {
   if (!DELIVERY_AREAS.some((area) => area.value === values.deliveryArea)) {
     errors.deliveryArea = "Please select a delivery area.";
   }
+  const zoneError = deliveryZoneError(values.division, values.district, values.deliveryArea);
+  if (zoneError) errors.deliveryArea = zoneError;
   if (!PAYMENT_METHODS.some((method) => method.value === values.paymentMethod)) {
     errors.paymentMethod = "Please select a payment method.";
   }

@@ -1,5 +1,5 @@
 import type { CartItem } from "@/types/cart";
-import type { LiveInventoryItem } from "@/types/inventory";
+import type { LiveInventoryItem, VariantStock } from "@/types/inventory";
 
 /*
  * Stock rules shared by the storefront (pure, client-safe).
@@ -17,6 +17,7 @@ export interface ResolvedStock {
   unavailable: boolean;
   /** True when the value came from live inventory rather than the catalog fallback. */
   live: boolean;
+  variant?: boolean;
 }
 
 export interface InventoryView {
@@ -35,13 +36,19 @@ function fromLive(item: LiveInventoryItem): ResolvedStock {
 }
 
 /** One product's stock: live value when known, otherwise the catalog fallback. */
-export function resolveStock(productId: string, catalogStock: number | null, view: InventoryView): ResolvedStock {
+export function resolveStock(productId: string, catalogStock: number | null, view: InventoryView, selection?: Pick<VariantStock, "size" | "color" | "design">): ResolvedStock {
   const override = view.overrides?.get(productId);
-  if (override) return fromLive(override);
+  const selected = (item: LiveInventoryItem) => {
+    const base = fromLive(item);
+    if (!selection || !item.variants?.length) return base;
+    const variant = item.variants.find(v => v.size === selection.size && v.color === selection.color && v.design === selection.design);
+    return { ...base, stock: Math.min(base.stock ?? 0, variant?.stock ?? 0), unavailable: base.unavailable || !variant?.active, variant: true };
+  };
+  if (override) return selected(override);
   if (!view.products) return { stock: catalogStock, unavailable: false, live: false };
   const item = view.products.get(productId);
   // No Products row → Apps Script treats the product as untracked; mirror that.
-  return item ? fromLive(item) : { stock: null, unavailable: false, live: true };
+  return item ? selected(item) : { stock: null, unavailable: false, live: true };
 }
 
 /**
@@ -54,7 +61,7 @@ export function getStockWarning(item: CartItem, items: CartItem[], resolved: Res
   if (resolved.stock === null) return null;
   if (resolved.stock === 0) return "This item is out of stock. Please remove it from your bag.";
 
-  const lines = items.filter((line) => line.productId === item.productId);
+  const lines = items.filter((line) => line.productId === item.productId && (!resolved.variant || line.size === item.size && line.color === item.color && line.design === item.design));
   const total = lines.reduce((sum, line) => sum + line.quantity, 0);
   if (total <= resolved.stock) return null;
   return lines.length > 1

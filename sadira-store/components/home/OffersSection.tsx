@@ -24,7 +24,7 @@ export async function OffersSection() {
         </div>
         <Link href={ROUTES.shop} className="inline-flex min-h-11 items-center gap-2 text-sm font-medium hover:text-primary-dark">Explore the collection <ArrowRight className="size-4" aria-hidden="true" /></Link>
       </div>
-      <ul className="mt-7 grid grid-cols-2 gap-x-3 gap-y-7 sm:gap-x-5 lg:grid-cols-4 lg:gap-x-6">
+      <ul className="reveal mt-7 grid grid-cols-2 gap-x-3 gap-y-7 sm:gap-x-5 lg:grid-cols-4 lg:gap-x-6">
         {products.map(product => <li key={product.id}><ProductCard product={product} /></li>)}
       </ul>
     </Container>

@@ -96,6 +96,7 @@ export const NAV_LINKS: NavLink[] = [
 
 /** Public informational navigation, also used by the footer and care pages. */
 export const CUSTOMER_CARE_LINKS: NavLink[] = [
+  { label: "Track Order", href: "/track-order" },
   { label: "Contact", href: ROUTES.contact },
   { label: "FAQ", href: ROUTES.faq },
   { label: "Size Guide", href: ROUTES.sizeGuide },

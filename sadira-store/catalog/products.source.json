@@ -569,9 +569,7 @@
       "price": 1500,
       "description": "An abaya and hijab set, available together as a combo.",
       "photos": [
-        "Abaya Hijab combo 1.jpeg",
-        "Hijab 1.jpeg",
-        "Hijab 2.jpeg"
+        "Abaya Hijab combo 1.jpeg"
       ],
       "detailsSource": "price.png"
     },
@@ -893,6 +891,29 @@
         "Sunflower clip2 .jpeg"
       ],
       "detailsSource": "Clip deatisl.png"
+    },
+    {
+      "id": "SAD-SCARF-003",
+      "category": "scarf",
+      "name": "Leopard Hijab",
+      "slug": "leopard-hijab",
+      "price": 440,
+      "salePrice": null,
+      "description": "A standalone hijab with a leopard print.",
+      "features": [],
+      "details": [],
+      "sizes": [],
+      "colors": [],
+      "designs": [],
+      "stock": null,
+      "photos": [
+        "../Combo/Hijab 1.jpeg",
+        "../Combo/Hijab 2.jpeg"
+      ],
+      "detailsSource": "../Combo/price.png",
+      "featured": false,
+      "newArrival": true,
+      "status": "active"
     }
   ]
 }

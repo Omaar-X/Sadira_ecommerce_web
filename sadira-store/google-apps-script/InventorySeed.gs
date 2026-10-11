@@ -30,5 +30,6 @@ var SADIRA_PRODUCT_SEED = [
   { productId: "SAD-ABAYA-008", productName: "Popcorn Fabrics Abaya", stock: null },
   { productId: "SAD-SCARF-002", productName: "Leopard Print Hijab", stock: null },
   { productId: "SAD-COMBO-002", productName: "Abaya & Accessories Combo", stock: null },
-  { productId: "SAD-CLIP-001", productName: "Sunflower Hair Clip", stock: null }
+  { productId: "SAD-CLIP-001", productName: "Sunflower Hair Clip", stock: null },
+  { productId: "SAD-SCARF-003", productName: "Leopard Hijab", stock: null }
 ];

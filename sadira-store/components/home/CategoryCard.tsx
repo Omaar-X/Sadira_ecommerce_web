@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { CategoryPlaceholder } from "@/components/home/CategoryPlaceholder";
 import type { HomeCategory } from "@/components/home/categoryData";
+import { Tilt } from "@/components/ui/Tilt";
 import { cn } from "@/lib/utils";
 
 /*
@@ -26,10 +27,11 @@ export function CategoryCard({ category }: { category: HomeCategory }) {
 
   return (
     <li className={cn(layout.card, fullWidthOnMobile && "col-span-2")}>
+      <Tilt max={5}>
       <Link href={href} className="group block rounded-2xl">
         <div
           className={cn(
-            "relative overflow-hidden rounded-2xl bg-blush ring-1 ring-transparent transition duration-300 ease-soft group-hover:ring-primary/60",
+            "category-frame depth-photo relative overflow-hidden rounded-2xl bg-blush ring-1 ring-transparent transition duration-300 ease-soft group-hover:ring-primary/60",
             fullWidthOnMobile ? "aspect-[4/3]" : layout.frame,
           )}
         >
@@ -61,6 +63,7 @@ export function CategoryCard({ category }: { category: HomeCategory }) {
           />
         </div>
       </Link>
+      </Tilt>
     </li>
   );
 }

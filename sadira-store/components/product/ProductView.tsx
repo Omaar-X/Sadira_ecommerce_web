@@ -66,7 +66,9 @@ export function ProductView({ product, videoSrc }: { product: PublicProduct; vid
   const [notice, setNotice] = useState<Notice | null>(null);
 
   // Live inventory (Google Sheets) when available; the catalog stock until then / without it.
-  const live = useProductStock(product.id, product.stock);
+  const selectedDesign = product.designs.find(option => option.id === designId)?.label ?? null;
+  const optionsComplete = (!product.sizes.length || !!size) && (!product.colors.length || !!color) && (!product.designs.length || !!selectedDesign);
+  const live = useProductStock(product.id, product.stock, optionsComplete ? { size, color, design: selectedDesign } : undefined);
   const outOfStock = live.stock === 0;
   const canPurchase = !outOfStock && !live.unavailable && product.price !== null;
   const maxQuantity = Math.max(1, maxOrderQuantity(product, live));

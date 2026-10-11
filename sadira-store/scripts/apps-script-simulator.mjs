@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import fs from 'node:fs';
-import { randomUUID } from 'node:crypto';
-const source = fs.readFileSync('google-apps-script/Code.gs', 'utf8') + '\n' + fs.readFileSync('google-apps-script/Catalog.gs', 'utf8') + '\n' + fs.readFileSync('google-apps-script/CatalogSeed.gs', 'utf8');
+import { randomUUID, createHash } from 'node:crypto';
+const source = ['Code.gs', 'Reliability.gs', 'VariantStock.gs', 'Catalog.gs', 'CatalogSeed.gs'].map(name => fs.readFileSync('google-apps-script/' + name, 'utf8')).join('\n');
 export function fixture() {
   let fail = null, held = false;
   const properties = {};
@@ -26,7 +26,7 @@ export function fixture() {
   }
   const sheets = {};
   const ss = { getSheetByName:n=>sheets[n], insertSheet:n=>sheets[n]=new Sheet(n), setSpreadsheetTimeZone(){} };
-  const ctx = vm.createContext({ Date, ContentService:{ MimeType:{JSON:'application/json'}, createTextOutput:text=>({text,setMimeType(){return this;}})}, console:{log(){},warn(){},error(){}}, PropertiesService:{getScriptProperties:()=>props}, SpreadsheetApp:{getActiveSpreadsheet:()=>ss,flush(){}}, Utilities:{formatDate:()=> '2026-09-30 23:00:00',getUuid:()=>randomUUID(),base64Decode:s=>Array.from(Buffer.from(s,'base64')),base64Encode:b=>Buffer.from(b).toString('base64'),newBlob:(bytes,mime,name)=>({bytes,mime,name,getBytes:()=>bytes})}, LockService:{getScriptLock:()=>({tryLock(){ assert.equal(held,false); held=true; return true; },releaseLock(){held=false;}})} });
+  const ctx = vm.createContext({ Date, ContentService:{ MimeType:{JSON:'application/json'}, createTextOutput:text=>({text,setMimeType(){return this;}})}, console:{log(){},warn(){},error(){}}, PropertiesService:{getScriptProperties:()=>props}, SpreadsheetApp:{getActiveSpreadsheet:()=>ss,flush(){}}, Utilities:{DigestAlgorithm:{SHA_256:"sha256"},computeDigest:(algorithm,value)=>Array.from(createHash(algorithm).update(value).digest()),formatDate:()=> '2026-09-30 23:00:00',getUuid:()=>randomUUID(),base64Decode:s=>Array.from(Buffer.from(s,'base64')),base64Encode:b=>Buffer.from(b).toString('base64'),newBlob:(bytes,mime,name)=>({bytes,mime,name,getBytes:()=>bytes})}, LockService:{getScriptLock:()=>({tryLock(){ assert.equal(held,false); held=true; return true; },releaseLock(){held=false;}})} });
   vm.runInContext(source,ctx);
   ctx.setup();
   const t=ctx.ensureSheets_(ss);

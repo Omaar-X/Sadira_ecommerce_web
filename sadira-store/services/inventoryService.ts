@@ -1,5 +1,7 @@
 import { callAppsScript } from "@/services/appsScript";
+import { invalidateBrowseCatalogCache } from "@/services/catalogService";
 import type { InventoryStatus, LiveInventoryItem } from "@/types/inventory";
+import type { VariantStock } from "@/types/inventory";
 
 /*
  * SERVER ONLY. Live stock from the Google Sheets Products tab, for DISPLAY
@@ -25,6 +27,7 @@ function parseItem(value: unknown): LiveInventoryItem | null {
   const trackStock = raw.trackStock === true;
   const stock = typeof raw.stock === "number" && Number.isInteger(raw.stock) && raw.stock >= 0 ? raw.stock : null;
   const status: InventoryStatus = raw.status === "active" ? "active" : "inactive";
+  const variants: VariantStock[] = Array.isArray(raw.variants) ? raw.variants.filter((v): v is VariantStock => !!v && typeof v === "object" && [v.size, v.color, v.design].every(option => option === null || typeof option === "string") && Number.isSafeInteger(v.stock) && v.stock >= 0 && typeof v.active === "boolean") : [];
   return {
     productId: raw.productId,
     trackStock,
@@ -32,6 +35,7 @@ function parseItem(value: unknown): LiveInventoryItem | null {
     stock: trackStock ? (stock ?? 0) : null,
     status,
     updatedAt: typeof raw.updatedAt === "string" ? raw.updatedAt.slice(0, 40) : "",
+    variants,
   };
 }
 
@@ -67,6 +71,7 @@ export async function getLiveInventoryMap(): Promise<Map<string, LiveInventoryIt
 
 /** Drop the cached copy (after an order changed stock, or a stock error showed it was stale). */
 export function invalidateInventoryCache() {
+  invalidateBrowseCatalogCache(); // prices/products may have changed along with stock
   cache = null;
   inflight = null; // the next caller starts a fresh load
   generation++;
